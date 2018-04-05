@@ -4,6 +4,7 @@
         THUMB
         
 meanfilter3:
+        push    {R4-R11,LR}
         sub     R12,R0,#2               // dim_x-2 (out_x)
         sub     R6,R1,#2                // dim_y-2
         lsl     R8,R0,#1                // dim_x*2 (dbl_x)
@@ -60,7 +61,8 @@ fim:
         mul     R7,R12,R6               // tam = (dim_x - 2)*(dim_y - 2)
         mov     R0,R7                   // coloca o tamanho de img_out no retorno(R0)
 
-        bx      lr
+        pop     {R4-R11,LR}
+        bx      LR
 
         END
 
