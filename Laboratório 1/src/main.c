@@ -4,7 +4,7 @@
 extern long int meanfilter3(int dim_x, int dim_y, char* img_in, char* img_out);
 
 int main(){
-  FILE *fIn = fopen("img_in/lena.ascii.pgm", "r");
+  FILE *fIn = fopen("img_in/teste_performance.ascii.pgm", "r");
   FILE *fOut = fopen("img_out/out.ascii.pgm", "w");
   
   char value;
