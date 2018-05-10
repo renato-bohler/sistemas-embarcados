@@ -1,14 +1,14 @@
-"C:\Users\junio\Documents\Facul\Sistemas Embarcados\Tiva_IAR8\exemplo1\src\main.c"
+"C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\Laboratório 2\exemplo1\src\main.c"
 -std=c11
 -ferror-limit=0
 -I
-C:\Users\junio\Documents\Facul\Sistemas Embarcados\Tiva_IAR8\exemplo1\..\..\..
+C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\Laboratório 2\exemplo1\..\..\..
 -I
-C:\Users\junio\Documents\Facul\Sistemas Embarcados\Tiva_IAR8\exemplo1\..
+C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\Laboratório 2\exemplo1\..
 -I
-C:\Users\junio\Documents\Facul\Sistemas Embarcados\Tiva_IAR8\exemplo1\..\inc
+C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\Laboratório 2\exemplo1\..\inc
 -I
-C:\Users\junio\Documents\Facul\Sistemas Embarcados\Tiva_IAR8\exemplo1\..\driverlib
+C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\Laboratório 2\exemplo1\..\driverlib
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\CMSIS\Include
 -I
@@ -16,13 +16,13 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc\c
 -I
-C:\Users\junio\Documents\Facul
+C:\Users\junio\Documents\Facul\Sistemas Embarcados\git
 -I
-C:\Users\junio\Documents\Facul\Sistemas Embarcados\Tiva_IAR8
+C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\Laboratório 2
 -I
-C:\Users\junio\Documents\Facul\Sistemas Embarcados\Tiva_IAR8\inc
+C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\Laboratório 2\inc
 -I
-C:\Users\junio\Documents\Facul\Sistemas Embarcados\Tiva_IAR8\driverlib
+C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\Laboratório 2\driverlib
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\CMSIS\Include
 -D__CHAR_BITS__=8

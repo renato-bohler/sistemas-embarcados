@@ -37,6 +37,10 @@
             <file>$PROJ_DIR$\ewarm\Obj\startup_ewarm.pbi</file>
             <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
             <file>$PROJ_DIR$\ewarm\Exe\exemplo1.bin</file>
+            <file>$PROJ_DIR$\..\..\..\..\Tiva_IAR8\exemplo1\src\startup_ewarm.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\Tiva_IAR8\driverlib\gpio.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\Tiva_IAR8\exemplo1\src\main.c</file>
+            <file>$PROJ_DIR$\..\driverlib\gpio.c</file>
         </outputs>
         <file>
             <name>$PROJ_DIR$\ewarm\Exe\exemplo1.out</name>
@@ -80,7 +84,7 @@
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 20 25 11 28 16 19 8 17 6 22 21 4 30 2</file>
+                    <file> 25 21 11 30 28 16 4 8 17 6 22 19 20 2</file>
                 </tool>
             </inputs>
         </file>

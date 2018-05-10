@@ -11,7 +11,7 @@
 #define FREQ_UM_SEGUNDO 0xB71B00
 #define FREQ_UM_MILI    0x5B8D80        //por enquanto ta em 0.5 seg para visualização, 0x1D4C0 é 1ms
 uint8_t LED_D1 = 0;
-//uint8_t LED_D2 = 0;
+uint8_t LED_D2 = 0;
 
 void SysTick_Handler(void){
     GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, LED_D1);
@@ -24,7 +24,10 @@ void main(void){
                                               SYSCTL_USE_PLL |
                                               SYSCTL_CFG_VCO_480),
                                               12000000); // PLL em 12MHz?
+  SysCtlPeripheralReset(SYSCTL_PERIPH_TIMER0);
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
   
+  HWREG(0x4003000C) &= 0xFFFFFFFE; // desabilita timer 0
   HWREG(NVIC_ST_CTRL) = 0x5;
   HWREG(NVIC_ST_RELOAD) = FREQ_UM_SEGUNDO;
   
@@ -39,7 +42,7 @@ void main(void){
   while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOL)); // Aguarda final da habilitação
   
   GPIOPinTypeGPIOInput(GPIO_PORTL_BASE, GPIO_PIN_4); // PL4 como entrada 
-  GPIOPadConfigSet(GPIO_PORTL_BASE, GPIO_PIN_4, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
+  GPIOPadConfigSet(GPIO_PORTL_BASE, GPIO_PIN_4, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD);
 
   SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOJ); // Habilita GPIO J (push-button SW1 = PJ0, push-button SW2 = PJ1)
   while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOJ)); // Aguarda final da habilitação
@@ -47,7 +50,6 @@ void main(void){
   GPIOPinTypeGPIOInput(GPIO_PORTJ_BASE, GPIO_PIN_0); // push-button SW1 como entrada
   GPIOPadConfigSet(GPIO_PORTJ_BASE, GPIO_PIN_0 | GPIO_PIN_1, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
   
-  HWREG(0x4003000C) &= 0xFFFFFFFE; // desabilita timer 0
   HWREG(0x40062420) |= 0x10; //configura pino PL4 para ser controlado por hardware alternativo
   HWREG(0x4006252C) |= 0x00030000; //PL4 recebe T0CCP0
   
@@ -75,11 +77,11 @@ void main(void){
       }
     }
     
-    /*if(HWREG(TIMER0_TAV_R) == 3){
+    if(HWREG(0x40030050) >= 3){
       GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, LED_D2);
       LED_D2 ^= GPIO_PIN_2;
-      HWREG(TIMER0_TAV_R) = 0x0;
-    }*/
+      HWREG(0x40030050) = 0x0;
+    }
     
   } // while
 } // main

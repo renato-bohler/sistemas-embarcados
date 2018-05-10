@@ -16,7 +16,7 @@
         <ShowSource>1</ShowSource>
     </Trace1>
     <DebugChecksum>
-        <Checksum>2546862272</Checksum>
+        <Checksum>1856374949</Checksum>
     </DebugChecksum>
     <CodeCoverage>
         <Enabled>_ 0</Enabled>
@@ -84,7 +84,8 @@
     </DisassembleMode>
     <Breakpoints>
         <Bp0>_ "EMUL_DATA" "ui32Config" 0 0 0 116 0 "" 0 "" 0 0 0 4294967295</Bp0>
-        <Count>1</Count>
+        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.82.7" 1 0 0 0 "" 0 ""</Bp1>
+        <Count>2</Count>
     </Breakpoints>
     <LogFile>
         <LoggingEnabled>_ 0</LoggingEnabled>
