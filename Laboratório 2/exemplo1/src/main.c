@@ -10,26 +10,78 @@
 
 #define FREQ_UM_SEGUNDO 0xB71B00
 #define FREQ_UM_MILI    0x5B8D80        //por enquanto ta em 0.5 seg para visualização, 0x1D4C0 é 1ms
+
+#define REG_GPTMCTL     0x4003000C      // Timer 0 Control
+#define REG_GPTMCFG     0x40030000      // Timer 0 Config
+#define REG_GPTMTAMR    0x40030004      // Timer 0 Timer A mode
+#define REG_GPTMTAV     0x40030050      // Timer 0 Timer A value
+
+#define VALOR_COUNTER   HWREG(REG_GPTMTAV)
+
 uint8_t LED_D1 = 0;
 uint8_t LED_D2 = 0;
 
 void SysTick_Handler(void){
     GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, LED_D1);
     LED_D1 ^= GPIO_PIN_1;
-} // SysTick_Handler
+}
 
-void main(void){ 
+void desabilitaTimer0(void) {
+  HWREG(REG_GPTMCTL) &= 0xFFFFFFFE;
+}
+
+void habilitaTimer0(void) {
+  HWREG(REG_GPTMCTL) |= 0x1;
+}
+
+void configuraTimer0(void) {
+  // Configura pino PL4 para ser controlado por hardware alternativo
+  HWREG(0x40062420) |= 0x10;
+  
+  // PL4 recebe T0CCP0
+  HWREG(0x4006252C) |= 0x00030000;
+  
+  // Define que a configuracao estara determinada por GPTMAMR
+  HWREG(REG_GPTMCFG) &= 0xFFFFFFFC;
+  HWREG(REG_GPTMCFG) |= 0x4;
+  
+  // Capture-edge mode, count up
+  HWREG(REG_GPTMTAMR) &= 0xFFFFFFF8;
+  HWREG(REG_GPTMTAMR) |= 0x13;
+  
+  // Positive edge counter
+  HWREG(REG_GPTMCTL) &= 0xFFFFFFF3;
+}
+
+void habilitaSysTick(void) {
+  HWREG(NVIC_ST_CTRL) = 0x5;
+}
+
+void habilitaInterrupcaoSysTick(void) {
+  HWREG(NVIC_ST_CTRL) |= 0x2;
+}
+
+void frequenciaSysTick(uint32_t freq) {
+  HWREG(NVIC_ST_RELOAD) = freq;
+}
+
+void config(void) {
+  // Configura o system clock
   uint32_t ui32SysClock = SysCtlClockFreqSet((SYSCTL_XTAL_25MHZ |
                                               SYSCTL_OSC_MAIN |
                                               SYSCTL_USE_PLL |
                                               SYSCTL_CFG_VCO_480),
-                                              12000000); // PLL em 12MHz?
+                                              12000000);
+  
+  // Habilita o periférico Timer 0
   SysCtlPeripheralReset(SYSCTL_PERIPH_TIMER0);
   SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
+
+  // Desabilita o Timer 0 A para configuração 
+  desabilitaTimer0();
   
-  HWREG(0x4003000C) &= 0xFFFFFFFE; // desabilita timer 0
-  HWREG(NVIC_ST_CTRL) = 0x5;
-  HWREG(NVIC_ST_RELOAD) = FREQ_UM_SEGUNDO;
+  habilitaSysTick();
+  frequenciaSysTick(FREQ_UM_SEGUNDO);
   
   SysCtlPeripheralEnable(SYSCTL_PERIPH_GPION); // Habilita GPIO N (LED D1 = PN1, LED D2 = PN0)
   while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPION)); // Aguarda final da habilitação
@@ -50,24 +102,19 @@ void main(void){
   GPIOPinTypeGPIOInput(GPIO_PORTJ_BASE, GPIO_PIN_0); // push-button SW1 como entrada
   GPIOPadConfigSet(GPIO_PORTJ_BASE, GPIO_PIN_0 | GPIO_PIN_1, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
   
-  HWREG(0x40062420) |= 0x10; //configura pino PL4 para ser controlado por hardware alternativo
-  HWREG(0x4006252C) |= 0x00030000; //PL4 recebe T0CCP0
+  // Configura o Timer 0 A para receber o sinal do pino PL4 como clock, edge-count up
+  configuraTimer0();
   
-  HWREG(0x40030000) &= 0xFFFFFFFC;
-  HWREG(0x40030000) |= 0x4;   // define que a configuracao estara determinada por GPTMAMR
-  HWREG(0x40030004) &= 0xFFFFFFF8;
-  HWREG(0x40030004) |= 0x13; //capture-edge mode, count up
-  HWREG(0x4003000C) &= 0xFFFFFFF3; // positive edge counter
-  // colocar de onde vai contar
-  // nao vamos usar interrupçao
-  HWREG(0x4003000C) |= 0x1; // habilita timer 0
-  //HWREG(TIMER0_TAV_R); //ler valor do counter
-  //HWREG(TIMER0_TAV_R) = 0x0;*/
+  // Habilita o Timer 0 A
+  habilitaTimer0();
   
-  
+  // Habilita a interrupção do SysTick
+  habilitaInterrupcaoSysTick();
+}
 
-  HWREG(NVIC_ST_CTRL) |= 0x2;   //enable interrupt
-  
+void main(void){
+  config();
+ 
   while(1){
     if(GPIOPinRead(GPIO_PORTJ_BASE, GPIO_PIN_0) == 0){ // Testa estado do push-button SW1
       if(HWREG(NVIC_ST_RELOAD) == FREQ_UM_SEGUNDO){
@@ -77,10 +124,10 @@ void main(void){
       }
     }
     
-    if(HWREG(0x40030050) >= 3){
+    if(VALOR_COUNTER >= 3){
       GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, LED_D2);
-      LED_D2 ^= GPIO_PIN_2;
-      HWREG(0x40030050) = 0x0;
+      LED_D2 ^= GPIO_PIN_0;
+      VALOR_COUNTER = 0x0;
     }
     
   } // while
