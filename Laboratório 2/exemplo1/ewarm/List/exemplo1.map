@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ELF Linker V8.11.2.13589/W32 for ARM                07/May/2018  17:41:52
+# IAR ELF Linker V8.11.2.13589/W32 for ARM                09/May/2018  23:10:00
 # Copyright 2007-2017 IAR Systems AB.
 #
 #    Output file  =  
@@ -10,7 +10,7 @@
 #        C:\Users\junio\Documents\Facul\Sistemas
 #        Embarcados\Tiva_IAR8\exemplo1\ewarm\List\exemplo1.map
 #    Command line =  
-#        -f C:\Users\junio\AppData\Local\Temp\EWC412.tmp
+#        -f C:\Users\junio\AppData\Local\Temp\EWD9EB.tmp
 #        ("C:\Users\junio\Documents\Facul\Sistemas
 #        Embarcados\Tiva_IAR8\driverlib\ewarm\Exe\driverlib.a"
 #        "C:\Users\junio\Documents\Facul\Sistemas
@@ -63,23 +63,23 @@ do not initialize { section .noinit };
   .intvec          const    0x00000000  0x200  startup_ewarm.o [1]
                           - 0x00000200  0x200
 
-"P1":                                   0x88c
+"P1":                                   0x8c0
   .text            ro code  0x00000200  0x4ec  sysctl.o [4]
   .text            ro code  0x000006ec  0x178  gpio.o [4]
-  .text            ro code  0x00000864  0x11e  main.o [1]
-  .text            ro code  0x00000982   0x40  zero_init3.o [6]
-  .text            ro code  0x000009c4   0x28  data_init.o [6]
-  .text            ro code  0x000009ec   0x22  fpinit_M.o [5]
-  .iar.init_table  const    0x00000a10   0x10  - Linker created -
-  .text            ro code  0x00000a20   0x1a  startup_ewarm.o [1]
-  .text            ro code  0x00000a3a    0xc  cstartup_M.o [6]
-  .text            ro code  0x00000a48   0x1a  cmain.o [6]
-  .text            ro code  0x00000a62    0x4  low_level_init.o [3]
-  .text            ro code  0x00000a66    0x4  exit.o [3]
-  .text            ro code  0x00000a6c    0xa  cexit.o [6]
-  .text            ro code  0x00000a78   0x14  exit.o [7]
-  .rodata          const    0x00000a8c    0x0  zero_init3.o [6]
-                          - 0x00000a8c  0x88c
+  .text            ro code  0x00000864  0x154  main.o [1]
+  .text            ro code  0x000009b8   0x40  zero_init3.o [6]
+  .text            ro code  0x000009f8   0x28  data_init.o [6]
+  .text            ro code  0x00000a20   0x22  fpinit_M.o [5]
+  .iar.init_table  const    0x00000a44   0x10  - Linker created -
+  .text            ro code  0x00000a54   0x1a  startup_ewarm.o [1]
+  .text            ro code  0x00000a6e    0xc  cstartup_M.o [6]
+  .text            ro code  0x00000a7c   0x1a  cmain.o [6]
+  .text            ro code  0x00000a96    0x4  low_level_init.o [3]
+  .text            ro code  0x00000a9a    0x4  exit.o [3]
+  .text            ro code  0x00000aa0    0xa  cexit.o [6]
+  .text            ro code  0x00000aac   0x14  exit.o [7]
+  .rodata          const    0x00000ac0    0x0  zero_init3.o [6]
+                          - 0x00000ac0  0x8c0
 
 "P2", part 1 of 2:                        0x4
   .bss             zero     0x20000000    0x1  main.o [1]
@@ -109,10 +109,10 @@ Zero (__iar_zero_init3)
     Module            ro code  ro data  rw data
     ------            -------  -------  -------
 C:\Users\junio\Documents\Facul\Sistemas Embarcados\Tiva_IAR8\exemplo1\ewarm\Obj: [1]
-    main.o                286                 1
+    main.o                340                 1
     startup_ewarm.o        26      512      256
     -------------------------------------------
-    Total:                312      512      257
+    Total:                366      512      257
 
 command line: [2]
     -------------------------------------------
@@ -149,10 +149,10 @@ shb_l.a: [7]
     -------------------------------------------
     Total:                 20
 
-    Gaps                    8        2
+    Gaps                    6        2
     Linker created                  16
 -----------------------------------------------
-    Grand Total:        2 170      530      257
+    Grand Total:        2 222      530      257
 
 
 *******************************************************************************
@@ -161,46 +161,46 @@ shb_l.a: [7]
 
 Entry                      Address   Size  Type      Object
 -----                      -------   ----  ----      ------
-.iar.init_table$$Base   0x00000a10          --   Gb  - Linker created -
-.iar.init_table$$Limit  0x00000a20          --   Gb  - Linker created -
-?main                   0x00000a49         Code  Gb  cmain.o [6]
-FaultISR                0x00000a37    0x2  Code  Lc  startup_ewarm.o [1]
+.iar.init_table$$Base   0x00000a44          --   Gb  - Linker created -
+.iar.init_table$$Limit  0x00000a54          --   Gb  - Linker created -
+?main                   0x00000a7d         Code  Gb  cmain.o [6]
+FaultISR                0x00000a6b    0x2  Code  Lc  startup_ewarm.o [1]
 GPIODirModeSet          0x000006ed   0x28  Code  Gb  gpio.o [4]
 GPIOPadConfigSet        0x00000715  0x104  Code  Gb  gpio.o [4]
 GPIOPinRead             0x00000819    0x8  Code  Gb  gpio.o [4]
 GPIOPinTypeGPIOInput    0x0000082d   0x14  Code  Gb  gpio.o [4]
 GPIOPinTypeGPIOOutput   0x00000841    0xa  Code  Gb  gpio.o [4]
 GPIOPinWrite            0x00000821    0x8  Code  Gb  gpio.o [4]
-IntDefaultHandler       0x00000a39    0x2  Code  Lc  startup_ewarm.o [1]
+IntDefaultHandler       0x00000a6d    0x2  Code  Lc  startup_ewarm.o [1]
 LED_D1                  0x20000000    0x1  Data  Gb  main.o [1]
-NmiSR                   0x00000a35    0x2  Code  Lc  startup_ewarm.o [1]
-Region$$Table$$Base     0x00000a10          --   Gb  - Linker created -
-Region$$Table$$Limit    0x00000a20          --   Gb  - Linker created -
-ResetISR                0x00000a21    0xe  Code  Gb  startup_ewarm.o [1]
+NmiSR                   0x00000a69    0x2  Code  Lc  startup_ewarm.o [1]
+Region$$Table$$Base     0x00000a44          --   Gb  - Linker created -
+Region$$Table$$Limit    0x00000a54          --   Gb  - Linker created -
+ResetISR                0x00000a55    0xe  Code  Gb  startup_ewarm.o [1]
 SysCtlClockFreqSet      0x00000261  0x20a  Code  Gb  sysctl.o [4]
 SysCtlPeripheralEnable  0x00000243    0x8  Code  Gb  sysctl.o [4]
 SysCtlPeripheralReady   0x00000221    0x8  Code  Gb  sysctl.o [4]
 SysTick_Handler         0x00000865   0x18  Code  Gb  main.o [1]
 _SysCtlMemTimingGet     0x00000201   0x20  Code  Lc  sysctl.o [4]
-__cmain                 0x00000a49         Code  Gb  cmain.o [6]
-__exit                  0x00000a79   0x14  Code  Gb  exit.o [7]
-__iar_data_init3        0x000009c5   0x28  Code  Gb  data_init.o [6]
-__iar_init_vfp          0x000009ed         Code  Gb  fpinit_M.o [5]
-__iar_program_start     0x00000a3b         Code  Gb  cstartup_M.o [6]
+__cmain                 0x00000a7d         Code  Gb  cmain.o [6]
+__exit                  0x00000aad   0x14  Code  Gb  exit.o [7]
+__iar_data_init3        0x000009f9   0x28  Code  Gb  data_init.o [6]
+__iar_init_vfp          0x00000a21         Code  Gb  fpinit_M.o [5]
+__iar_program_start     0x00000a6f         Code  Gb  cstartup_M.o [6]
 __iar_systems$$module {Abs}
                         0x00000001         Data  Gb  command line/config [2]
-__iar_zero_init3        0x00000983   0x40  Code  Gb  zero_init3.o [6]
-__low_level_init        0x00000a63    0x4  Code  Gb  low_level_init.o [3]
+__iar_zero_init3        0x000009b9   0x40  Code  Gb  zero_init3.o [6]
+__low_level_init        0x00000a97    0x4  Code  Gb  low_level_init.o [3]
 __vector_table          0x00000000  0x200  Data  Gb  startup_ewarm.o [1]
-_call_main              0x00000a55         Code  Gb  cmain.o [6]
-_exit                   0x00000a6d         Code  Gb  cexit.o [6]
-_main                   0x00000a5f         Code  Gb  cmain.o [6]
-exit                    0x00000a67    0x4  Code  Gb  exit.o [3]
+_call_main              0x00000a89         Code  Gb  cmain.o [6]
+_exit                   0x00000aa1         Code  Gb  cexit.o [6]
+_main                   0x00000a93         Code  Gb  cmain.o [6]
+exit                    0x00000a9b    0x4  Code  Gb  exit.o [3]
 g_pppui32XTALtoVCO      0x00000504  0x1b0  Data  Lc  sysctl.o [4]
 g_pui32VCOFrequencies   0x000006e4    0x8  Data  Lc  sysctl.o [4]
 g_pui32Xtals            0x00000498   0x6c  Data  Lc  sysctl.o [4]
 g_sXTALtoMEMTIM         0x000006b4   0x30  Data  Lc  sysctl.o [4]
-main                    0x0000087d   0xd8  Code  Gb  main.o [1]
+main                    0x0000087d   0xfc  Code  Gb  main.o [1]
 pui32Stack              0x20000004  0x100  Data  Lc  startup_ewarm.o [1]
 
 
@@ -212,7 +212,7 @@ pui32Stack              0x20000004  0x100  Data  Lc  startup_ewarm.o [1]
 [6] = rt7M_tl.a
 [7] = shb_l.a
 
-  2 170 bytes of readonly  code memory
+  2 222 bytes of readonly  code memory
     530 bytes of readonly  data memory
     257 bytes of readwrite data memory
 
