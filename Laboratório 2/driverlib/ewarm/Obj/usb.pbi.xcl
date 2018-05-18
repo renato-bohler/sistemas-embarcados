@@ -1,14 +1,14 @@
-"C:\Users\Hugo\Desktop\Tiva_IAR8\driverlib\usb.c"
+"C:\ti\TivaWare_C_Series-2.1.4.178\driverlib\usb.c"
 -std=c11
 -ferror-limit=0
 -I
-C:\Users\Hugo\Desktop\Tiva_IAR8\driverlib\..
+C:\ti\TivaWare_C_Series-2.1.4.178\driverlib\..
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc\c
 -I
-C:\Users\Hugo\Desktop\Tiva_IAR8
+C:\ti\TivaWare_C_Series-2.1.4.178
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0

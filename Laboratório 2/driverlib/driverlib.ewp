@@ -198,7 +198,7 @@
                 </option>
                 <option>
                     <name>DSPExtension</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
             </data>
         </settings>
@@ -1005,7 +1005,7 @@
                 </option>
                 <option>
                     <name>IarchiveOutput</name>
-                    <state>C:\Users\Hugo\Desktop\Tiva_IAR8\driverlib\ewarm\Exe\driverlib.a</state>
+                    <state>C:\ti\TivaWare_C_Series-2.1.4.178\driverlib\ewarm\Exe\driverlib.a</state>
                 </option>
             </data>
         </settings>

@@ -2,7 +2,7 @@
 
 "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\bin\armsim2.dll" 
 
-"C:\Users\Hugo\Desktop\Tiva_IAR8\driverlib\ewarm\Exe\driverlib.out" 
+"C:\desespero\TivaWare_C_Series-2.1.4.178\examples\boards\ek-tm4c1294xl\driverlib\ewarm\Exe\driverlib.out" 
 
 --plugin "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\bin\armbat.dll" 
 
