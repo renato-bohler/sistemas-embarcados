@@ -1,0 +1,588 @@
+###############################################################################
+#
+# IAR ELF Linker V8.11.2.13589/W32 for ARM                24/May/2018  20:43:35
+# Copyright 2007-2017 IAR Systems AB.
+#
+#    Output file  =  
+#        C:\Users\junio\Documents\Facul\Sistemas
+#        Embarcados\git\sistemas-embarcados\lab_3\CMSIS_RTOS_IAR8\blinky\Debug\Exe\blinky.out.tmp
+#    Map file     =  
+#        C:\Users\junio\Documents\Facul\Sistemas
+#        Embarcados\git\sistemas-embarcados\lab_3\CMSIS_RTOS_IAR8\blinky\Debug\List\blinky.map
+#    Command line =  
+#        -f C:\Users\junio\AppData\Local\Temp\EW31AC.tmp
+#        ("C:\Users\junio\Documents\Facul\Sistemas
+#        Embarcados\git\sistemas-embarcados\lab_3\CMSIS_RTOS_IAR8\Lib_EaBaseBoard\Debug\Exe\Lib_EaBaseBoard.a"
+#        "C:\Users\junio\Documents\Facul\Sistemas
+#        Embarcados\git\sistemas-embarcados\lab_3\CMSIS_RTOS_IAR8\Lib_MCU\Debug\Exe\Lib_MCU.a"
+#        "C:\Users\junio\Documents\Facul\Sistemas
+#        Embarcados\git\sistemas-embarcados\lab_3\CMSIS_RTOS_IAR8\blinky\Debug\Obj\main.o"
+#        "C:\Users\junio\Documents\Facul\Sistemas
+#        Embarcados\git\sistemas-embarcados\lab_3\CMSIS_RTOS_IAR8\blinky\Debug\Obj\RTX_Conf_CM.o"
+#        "C:\Users\junio\Documents\Facul\Sistemas
+#        Embarcados\git\sistemas-embarcados\lab_3\CMSIS_RTOS_IAR8\RTOS\RTX\SRC\IAR\CM3_LE\RTX_Lib_CM.a"
+#        "C:\Users\junio\Documents\Facul\Sistemas
+#        Embarcados\git\sistemas-embarcados\lab_3\CMSIS_RTOS_IAR8\blinky\Debug\Obj\startup_LPC13xx.o"
+#        "C:\Users\junio\Documents\Facul\Sistemas
+#        Embarcados\git\sistemas-embarcados\lab_3\CMSIS_RTOS_IAR8\blinky\Debug\Obj\system_LPC13xx.o"
+#        -o "C:\Users\junio\Documents\Facul\Sistemas
+#        Embarcados\git\sistemas-embarcados\lab_3\CMSIS_RTOS_IAR8\blinky\Debug\Exe\blinky.out.tmp"
+#        --map "C:\Users\junio\Documents\Facul\Sistemas
+#        Embarcados\git\sistemas-embarcados\lab_3\CMSIS_RTOS_IAR8\blinky\Debug\List\blinky.map"
+#        --config "C:\Users\junio\Documents\Facul\Sistemas
+#        Embarcados\git\sistemas-embarcados\lab_3\CMSIS_RTOS_IAR8\blinky\..\linker\ldscript_irom_iar.icf"
+#        --semihosting --entry __iar_program_start --redirect
+#        __iar_sh_stdout=__iar_sh_stdout_swo --vfe --text_out locale)
+#
+###############################################################################
+
+*******************************************************************************
+*** RUNTIME MODEL ATTRIBUTES
+***
+
+CppFlavor       = *
+__SystemLibrary = DLib
+__dlib_version  = 6
+
+
+*******************************************************************************
+*** HEAP SELECTION
+***
+
+The basic heap was selected because some modules are built with
+size limitations (and not runtime checking), and --advanced_heap
+was not specified.
+
+
+*******************************************************************************
+*** PLACEMENT SUMMARY
+***
+
+"A0":  place at 0x00000000 { ro section .intvec };
+"P1":  place in [from 0x00000000 to 0x000002fb] |
+                [from 0x00000300 to 0x00007fff] { ro };
+define block CSTACK with size = 1K, alignment = 8 { };
+define block HEAP with size = 1K, alignment = 8 { };
+"P2":  place in [from 0x10000000 to 0x10001fdf] {
+          rw, block CSTACK, block HEAP };
+"P3":  place in [from 0x000002fc to 0x000002ff] { section .crp };
+initialize by copy { rw };
+
+  Section            Kind        Address    Size  Object
+  -------            ----        -------    ----  ------
+"A0":                                      0x128
+  .intvec                     0x00000000   0x128  <Block>
+    .intvec          ro code  0x00000000   0x128  startup_LPC13xx.o [1]
+                            - 0x00000128   0x128
+
+"P1", part 1 of 2:                           0x4
+  .rodata            const    0x00000128     0x0  zero_init3.o [7]
+  .rodata            const    0x00000128     0x0  copy_init3.o [7]
+  Initializer bytes  const    0x00000128     0x4  <for P2 s0>
+                            - 0x0000012c     0x4
+
+"P3":                                        0x4
+  .crp               ro code  0x000002fc     0x4  startup_LPC13xx.o [1]
+                            - 0x00000300     0x4
+
+"P1", part 2 of 2:                        0x2b78
+  .text              ro code  0x00000300   0x674  rt_CMSIS.o [5]
+  .text              ro code  0x00000974    0x96  rt_Memory.o [5]
+  .text              ro code  0x00000a0a     0xa  xsprout.o [6]
+  .text              ro code  0x00000a14   0x48c  rt_Task.o [5]
+  .text              ro code  0x00000ea0     0x6  rt_Time.o [5]
+  .rodata            const    0x00000ea6     0x2  RTX_Conf_CM.o [1]
+  .text              ro code  0x00000ea8   0x1dc  rt_Mailbox.o [5]
+  .text              ro code  0x00001084    0x48  RTX_Conf_CM.o [1]
+  .text              ro code  0x000010cc   0x110  rt_Event.o [5]
+  .text              ro code  0x000011dc   0x150  rt_Mutex.o [5]
+  .text              ro code  0x0000132c    0xf4  HAL_CM.o [5]
+  .text              ro code  0x00001420   0x210  rt_List.o [5]
+  .text              ro code  0x00001630    0x9a  rt_MemBox.o [5]
+  .rodata            const    0x000016ca     0x2  RTX_Conf_CM.o [1]
+  .text              ro code  0x000016cc   0x124  HAL_CM3.o [5]
+  .text              ro code  0x000017f0    0x24  rt_System.o [5]
+  .text              ro code  0x00001814    0x18  rt_Robin.o [5]
+  .text              ro code  0x0000182c   0x108  rt_System.o [5]
+  .text              ro code  0x00001934     0x4  low_level_init.o [6]
+  .text              ro code  0x00001938    0x28  data_init.o [7]
+  .text              ro code  0x00001960     0x4  exit.o [6]
+  .text              ro code  0x00001964     0x6  ABImemclr4.o [7]
+  .text              ro code  0x0000196a     0x2  rt_System.o [5]
+  .text              ro code  0x0000196c    0x38  rt_Semaphore.o [5]
+  .text              ro code  0x000019a4    0x48  rt_Robin.o [5]
+  .text              ro code  0x000019ec     0xa  cexit.o [7]
+  .rodata            const    0x000019f6     0x2  RTX_Conf_CM.o [1]
+  .text              ro code  0x000019f8    0x32  ABImemset48.o [7]
+  .rodata            const    0x00001a2a     0x1  RTX_Conf_CM.o [1]
+  .rodata            const    0x00001a2b     0x1  RTX_Conf_CM.o [1]
+  .text              ro code  0x00001a2c    0x14  exit.o [8]
+  .text              ro code  0x00001a40   0x3e4  oled.o [3]
+  .text              ro code  0x00001e24   0x284  gpio.o [4]
+  .text              ro code  0x000020a8   0x13c  ssp.o [4]
+  .text              ro code  0x000021e4    0x66  ABImemset.o [7]
+  .rodata            const    0x0000224c   0x300  font5x7.o [3]
+  .text              ro code  0x0000254c   0x2b8  main.o [1]
+  .text              ro code  0x00002804    0x40  sprintf.o [6]
+  .text              ro code  0x00002844   0x2a8  system_LPC13xx.o [1]
+  .text              ro code  0x00002aec   0x13e  xprintftiny.o [6]
+  .text              ro code  0x00002c2c    0x36  strlen.o [7]
+  .text              ro code  0x00002c62    0x40  zero_init3.o [7]
+  .text              ro code  0x00002ca2    0x2c  copy_init3.o [7]
+  .iar.init_table    const    0x00002cd0    0x24  - Linker created -
+  .text              ro code  0x00002cf4    0x20  startup_LPC13xx.o [1]
+  .rodata            const    0x00002d14    0x10  main.o [1]
+  .rodata            const    0x00002d24    0x10  main.o [1]
+  .rodata            const    0x00002d34    0x10  main.o [1]
+  .rodata            const    0x00002d44    0x10  main.o [1]
+  .rodata            const    0x00002d54    0x10  main.o [1]
+  .rodata            const    0x00002d64    0x10  main.o [1]
+  .rodata            const    0x00002d74    0x10  main.o [1]
+  .rodata            const    0x00002d84    0x10  RTX_Conf_CM.o [1]
+  .rodata            const    0x00002d94    0x10  RTX_Conf_CM.o [1]
+  .rodata            const    0x00002da4     0xc  main.o [1]
+  .rodata            const    0x00002db0     0xc  main.o [1]
+  .text              ro code  0x00002dbc     0xc  cstartup_M.o [7]
+  .rodata            const    0x00002dc8     0x8  main.o [1]
+  .rodata            const    0x00002dd0     0x8  main.o [1]
+  .rodata            const    0x00002dd8     0x8  RTX_Conf_CM.o [1]
+  .rodata            const    0x00002de0     0x8  oled.o [3]
+  .rodata            const    0x00002de8     0x4  main.o [1]
+  .rodata            const    0x00002dec     0x4  RTX_Conf_CM.o [1]
+  .rodata            const    0x00002df0     0x4  RTX_Conf_CM.o [1]
+  .rodata            const    0x00002df4     0x4  RTX_Conf_CM.o [1]
+  .rodata            const    0x00002df8     0x4  RTX_Conf_CM.o [1]
+  .rodata            const    0x00002dfc     0x4  RTX_Conf_CM.o [1]
+  .rodata            const    0x00002e00     0x4  RTX_Conf_CM.o [1]
+  .rodata            const    0x00002e04     0x4  RTX_Conf_CM.o [1]
+  .rodata            const    0x00002e08     0x4  RTX_Conf_CM.o [1]
+  .rodata            const    0x00002e0c     0x4  RTX_Conf_CM.o [1]
+  .text              ro code  0x00002e10     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e14     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e18     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e1c     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e20     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e24     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e28     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e2c     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e30     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e34     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e38     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e3c     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e40     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e44     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e48     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e4c     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e50     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e54     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e58     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e5c     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e60     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e64     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e68     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e6c     0x4  startup_LPC13xx.o [1]
+  .text              ro code  0x00002e70     0x4  startup_LPC13xx.o [1]
+  .text              const    0x00002e74     0x4  SVC_Table.o [5]
+                            - 0x00002e78  0x2b78
+
+"P2", part 1 of 3:                           0x4
+  P2 s0                       0x10000000     0x4  <Init block>
+    .data            inited   0x10000000     0x4  system_LPC13xx.o [1]
+                            - 0x10000004     0x4
+
+"P2", part 2 of 3:                        0x159c
+  .bss               zero     0x10000008   0xd30  RTX_Conf_CM.o [1]
+  .bss               zero     0x10000d38   0x300  oled.o [3]
+  .bss               zero     0x10001038   0x228  RTX_Conf_CM.o [1]
+  .bss               zero     0x10001260   0x1ac  RTX_Conf_CM.o [1]
+  .bss               zero     0x1000140c    0x84  RTX_Conf_CM.o [1]
+  .bss               zero     0x10001490    0x3c  rt_Task.o [5]
+  .bss               zero     0x100014cc    0x30  rt_List.o [5]
+  .bss               zero     0x100014fc    0x20  RTX_Conf_CM.o [1]
+  .bss               zero     0x1000151c    0x20  RTX_Conf_CM.o [1]
+  .bss               zero     0x1000153c    0x10  main.o [1]
+  .bss               zero     0x1000154c     0x8  rt_System.o [5]
+  .bss               zero     0x10001554     0x8  rt_Robin.o [5]
+  .bss               zero     0x1000155c     0x4  main.o [1]
+  .bss               zero     0x10001560     0x4  main.o [1]
+  .bss               zero     0x10001564     0x4  main.o [1]
+  .bss               zero     0x10001568     0x4  main.o [1]
+  .bss               zero     0x1000156c     0x4  main.o [1]
+  .bss               zero     0x10001570     0x4  main.o [1]
+  .bss               zero     0x10001574     0x4  main.o [1]
+  .bss               zero     0x10001578     0x4  RTX_Conf_CM.o [1]
+  .bss               zero     0x1000157c     0x4  RTX_Conf_CM.o [1]
+  .bss               zero     0x10001580     0x4  RTX_Conf_CM.o [1]
+  .bss               zero     0x10001584     0x4  rt_CMSIS.o [5]
+  .bss               zero     0x10001588     0x4  gpio.o [4]
+  .bss               zero     0x1000158c     0x4  gpio.o [4]
+  .bss               zero     0x10001590     0x4  gpio.o [4]
+  .bss               zero     0x10001594     0x4  gpio.o [4]
+  .bss               zero     0x10001598     0x4  rt_Time.o [5]
+  .bss               zero     0x1000159c     0x2  rt_CMSIS.o [5]
+  .bss               zero     0x1000159e     0x1  HAL_CM.o [5]
+                            - 0x1000159f  0x159b
+
+"P2", part 3 of 3:                         0x400
+  CSTACK                      0x100015a0   0x400  <Block>
+    CSTACK           uninit   0x100015a0   0x400  <Block tail>
+                            - 0x100019a0   0x400
+
+
+*******************************************************************************
+*** INIT TABLE
+***
+
+          Address     Size
+          -------     ----
+Zero (__iar_zero_init3)
+    1 destination range, total size 0x1597:
+          0x10000008  0x1597
+
+Copy (__iar_copy_init3)
+    1 source range, total size 0x4:
+          0x00000128     0x4
+    1 destination range, total size 0x4:
+          0x10000000     0x4
+
+
+
+*******************************************************************************
+*** MODULE SUMMARY
+***
+
+    Module             ro code  ro data  rw data
+    ------             -------  -------  -------
+C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\CMSIS_RTOS_IAR8\blinky\Debug\Obj: [1]
+    RTX_Conf_CM.o           72       84    4 564
+    main.o                 696      156       44
+    startup_LPC13xx.o      432
+    system_LPC13xx.o       680        4        4
+    --------------------------------------------
+    Total:               1 880      244    4 612
+
+command line: [2]
+    --------------------------------------------
+    Total:
+
+Lib_EaBaseBoard.a: [3]
+    font5x7.o                       768
+    oled.o                 996        8      768
+    --------------------------------------------
+    Total:                 996      776      768
+
+Lib_MCU.a: [4]
+    gpio.o                 644                16
+    ssp.o                  316
+    --------------------------------------------
+    Total:                 960                16
+
+RTX_Lib_CM.a: [5]
+    HAL_CM.o               244                 1
+    HAL_CM3.o              292
+    SVC_Table.o                       4
+    rt_CMSIS.o           1 652                 6
+    rt_Event.o             272
+    rt_List.o              528                48
+    rt_Mailbox.o           476
+    rt_MemBox.o            154
+    rt_Memory.o            150
+    rt_Mutex.o             336
+    rt_Robin.o              96                 8
+    rt_Semaphore.o          56
+    rt_System.o            302                 8
+    rt_Task.o            1 164                60
+    rt_Time.o                6                 4
+    --------------------------------------------
+    Total:               5 728        4      135
+
+dl7M_tln.a: [6]
+    exit.o                   4
+    low_level_init.o         4
+    sprintf.o               64
+    xprintftiny.o          318
+    xsprout.o               10
+    --------------------------------------------
+    Total:                 400
+
+rt7M_tl.a: [7]
+    ABImemclr4.o             6
+    ABImemset.o            102
+    ABImemset48.o           50
+    cexit.o                 10
+    copy_init3.o            44
+    cstartup_M.o            12
+    data_init.o             40
+    strlen.o                54
+    zero_init3.o            64
+    --------------------------------------------
+    Total:                 382
+
+shb_l.a: [8]
+    exit.o                  20
+    --------------------------------------------
+    Total:                  20
+
+    Gaps                     2        4        4
+    Linker created                   36    1 024
+------------------------------------------------
+    Grand Total:        10 368    1 064    6 559
+
+
+*******************************************************************************
+*** ENTRY LIST
+***
+
+Entry                      Address   Size  Type      Object
+-----                      -------   ----  ----      ------
+.iar.init_table$$Base   0x00002cd0          --   Gb  - Linker created -
+.iar.init_table$$Limit  0x00002cf4          --   Gb  - Linker created -
+.intvec$$Base           0x00000000          --   Gb  - Linker created -
+.intvec$$Limit          0x00000128          --   Gb  - Linker created -
+CMSIS_RTOS_API_Version  0x00002df8    0x4  Data  Gb  RTX_Conf_CM.o [1]
+CMSIS_RTOS_RTX_Version  0x00002dfc    0x4  Data  Gb  RTX_Conf_CM.o [1]
+CSTACK$$Base            0x100015a0          --   Gb  - Linker created -
+CSTACK$$Limit           0x100019a0          --   Gb  - Linker created -
+GPIOSetDir              0x00001e25  0x14a  Code  Gb  gpio.o [4]
+GPIOSetValue            0x00001f6f  0x10a  Code  Gb  gpio.o [4]
+GPIOShadowPort0         0x10001588    0x4  Data  Lc  gpio.o [4]
+GPIOShadowPort1         0x1000158c    0x4  Data  Lc  gpio.o [4]
+GPIOShadowPort2         0x10001590    0x4  Data  Lc  gpio.o [4]
+GPIOShadowPort3         0x10001594    0x4  Data  Lc  gpio.o [4]
+LED_off                 0x0000257f   0x32  Code  Gb  main.o [1]
+LED_on                  0x0000254d   0x32  Code  Gb  main.o [1]
+NVIC_EnableIRQ          0x000020a9   0x1a  Code  Lc  ssp.o [4]
+OS_Tick_Handler         0x000017cf         Code  Gb  HAL_CM3.o [5]
+PendSV_Handler          0x00001793         Code  Gb  HAL_CM3.o [5]
+Region$$Table$$Base     0x00002cd0          --   Gb  - Linker created -
+Region$$Table$$Limit    0x00002cf4          --   Gb  - Linker created -
+SSPInit                 0x000020c3   0xb0  Code  Gb  ssp.o [4]
+SSPSend                 0x00002173   0x36  Code  Gb  ssp.o [4]
+SVC_Count               0x00002e74         Data  Gb  SVC_Table.o [5]
+SVC_Handler             0x00001729         Code  Gb  HAL_CM3.o [5]
+SVC_Table               0x00002e78         Data  Gb  SVC_Table.o [5]
+SysTick_Handler         0x000017c9         Code  Gb  HAL_CM3.o [5]
+SystemCoreClock         0x10000000    0x4  Data  Gb  system_LPC13xx.o [1]
+SystemCoreClockUpdate   0x00002845  0x188  Code  Gb  system_LPC13xx.o [1]
+SystemInit              0x000029cd   0xa4  Code  Gb  system_LPC13xx.o [1]
+_PrintfTiny             0x00002b05  0x126  Code  Gb  xprintftiny.o [6]
+_SProut                 0x00000a0b    0xa  Code  Gb  xsprout.o [6]
+__Vectors               0x00000000          --   Gb  startup_LPC13xx.o [1]
+__Vectors_End           0x00000128         Data  Gb  startup_LPC13xx.o [1]
+__Vectors_Size {Abs}    0x00000128          --   Gb  startup_LPC13xx.o [1]
+__aeabi_memclr4         0x00001965         Code  Gb  ABImemclr4.o [7]
+__aeabi_memset          0x000021e5         Code  Gb  ABImemset.o [7]
+__cmain                 0x000010a5   0x22  Code  Gb  RTX_Conf_CM.o [1]
+__disable_irq           0x00001635    0xc  Code  Lc  rt_MemBox.o [5]
+__disable_irq           0x00000ead    0xc  Code  Lc  rt_Mailbox.o [5]
+__disable_irq           0x00001831    0xc  Code  Lc  rt_System.o [5]
+__disable_irq           0x00001425    0xc  Code  Lc  rt_List.o [5]
+__enable_irq            0x00001631    0x4  Code  Lc  rt_MemBox.o [5]
+__enable_irq            0x00000ea9    0x4  Code  Lc  rt_Mailbox.o [5]
+__enable_irq            0x0000182d    0x4  Code  Lc  rt_System.o [5]
+__enable_irq            0x00001421    0x4  Code  Lc  rt_List.o [5]
+__exit                  0x00001a2d   0x14  Code  Gb  exit.o [8]
+__iar_Memset            0x000021e5         Code  Gb  ABImemset.o [7]
+__iar_Memset4_word      0x000019f9         Code  Gb  ABImemset48.o [7]
+__iar_Memset8_word      0x000019f9         Code  Gb  ABImemset48.o [7]
+__iar_Memset_word       0x000021ed         Code  Gb  ABImemset.o [7]
+__iar_copy_init3        0x00002ca3   0x2c  Code  Gb  copy_init3.o [7]
+__iar_data_init3        0x00001939   0x28  Code  Gb  data_init.o [7]
+__iar_program_start     0x00002dbd         Code  Gb  cstartup_M.o [7]
+__iar_systems$$module {Abs}
+                        0x00000001         Data  Gb  command line/config [2]
+__iar_zero_init3        0x00002c63   0x40  Code  Gb  zero_init3.o [7]
+__low_level_init        0x00001935    0x4  Code  Gb  low_level_init.o [6]
+__vector_table          0x00000000         Data  Gb  startup_LPC13xx.o [1]
+__vector_table_0x1c     0x0000001c         Data  Gb  startup_LPC13xx.o [1]
+_alloc_box              0x000016f1         Code  Gb  HAL_CM3.o [5]
+_exit                   0x000019ed         Code  Gb  cexit.o [7]
+_free_box               0x0000170d         Code  Gb  HAL_CM3.o [5]
+_init_box               0x00001641   0x48  Code  Gb  rt_MemBox.o [5]
+clock                   0x00002681   0x24  Code  Gb  main.o [1]
+dbg_init                0x000013b9   0x20  Code  Gb  HAL_CM.o [5]
+dbg_msg                 0x1000159e    0x1  Data  Gb  HAL_CM.o [5]
+dbg_task_notify         0x000013d9   0x20  Code  Gb  HAL_CM.o [5]
+dbg_task_switch         0x000013f9    0xc  Code  Gb  HAL_CM.o [5]
+exit                    0x00001961    0x4  Code  Gb  exit.o [6]
+font5x7                 0x0000224c  0x300  Data  Gb  font5x7.o [3]
+font_mask               0x00002de0    0x8  Data  Lc  oled.o [3]
+isrSignalSet            0x0000072d   0x20  Code  Gb  rt_CMSIS.o [5]
+isr_evt_set             0x0000115b   0x22  Code  Gb  rt_Event.o [5]
+isr_mbx_send            0x00000f8b    0xe  Code  Gb  rt_Mailbox.o [5]
+lcd                     0x000026a5   0x90  Code  Gb  main.o [1]
+m_tmr                   0x10001580    0x4  Data  Gb  RTX_Conf_CM.o [1]
+main                    0x00002735   0x7e  Code  Gb  main.o [1]
+mp_stk                  0x10000008  0xd30  Data  Gb  RTX_Conf_CM.o [1]
+mp_stk_size             0x00002e08    0x4  Data  Gb  RTX_Conf_CM.o [1]
+mp_tcb                  0x10001260  0x1ac  Data  Gb  RTX_Conf_CM.o [1]
+mp_tcb_size             0x000016ca    0x2  Data  Gb  RTX_Conf_CM.o [1]
+mp_tmr_size             0x000019f6    0x2  Data  Gb  RTX_Conf_CM.o [1]
+mut_GLCD                0x10001574    0x4  Data  Gb  main.o [1]
+oled_clearScreen        0x00001cf3   0x48  Code  Gb  oled.o [3]
+oled_init               0x00001ba3   0x6e  Code  Gb  oled.o [3]
+oled_putChar            0x00001d3b   0x9e  Code  Gb  oled.o [3]
+oled_putPixel           0x00001c11   0xe2  Code  Gb  oled.o [3]
+oled_putString          0x00001de5   0x40  Code  Gb  oled.o [3]
+osDelay                 0x00000585   0x14  Code  Gb  rt_CMSIS.o [5]
+osKernelInitialize      0x000003ed   0x20  Code  Gb  rt_CMSIS.o [5]
+osKernelStart           0x0000040d   0x70  Code  Gb  rt_CMSIS.o [5]
+osMessageQId_osTimerMessageQ
+                        0x1000157c    0x4  Data  Gb  RTX_Conf_CM.o [1]
+osMutexCreate           0x00000825   0x28  Code  Gb  rt_CMSIS.o [5]
+osMutexRelease          0x00000861   0x14  Code  Gb  rt_CMSIS.o [5]
+osMutexWait             0x0000084d   0x14  Code  Gb  rt_CMSIS.o [5]
+osSignalSet             0x0000074d   0x16  Code  Gb  rt_CMSIS.o [5]
+osSignalWait            0x00000765   0x3c  Code  Gb  rt_CMSIS.o [5]
+osThreadCreate          0x00000531   0x2a  Code  Gb  rt_CMSIS.o [5]
+osThreadExit            0x0000055d   0x12  Code  Gb  rt_CMSIS.o [5]
+osThreadId_osTimerThread
+                        0x10001578    0x4  Data  Gb  RTX_Conf_CM.o [1]
+osTimerThread           0x00000645   0x40  Code  Gb  rt_CMSIS.o [5]
+os_active_TCB           0x100014fc   0x20  Data  Gb  RTX_Conf_CM.o [1]
+os_clockrate            0x00002e00    0x4  Data  Gb  RTX_Conf_CM.o [1]
+os_dly                  0x100014cc   0x18  Data  Gb  rt_List.o [5]
+os_error                0x00001089   0x1c  Code  Gb  RTX_Conf_CM.o [1]
+os_fifo                 0x1000140c   0x84  Data  Gb  RTX_Conf_CM.o [1]
+os_fifo_size            0x00001a2b    0x1  Data  Gb  RTX_Conf_CM.o [1]
+os_flags                0x00001a2a    0x1  Data  Gb  RTX_Conf_CM.o [1]
+os_idle_TCB             0x10001490   0x34  Data  Gb  rt_Task.o [5]
+os_idle_demon           0x00001085    0x4  Code  Gb  RTX_Conf_CM.o [1]
+os_initialized          0x1000159c    0x1  Data  Gb  rt_CMSIS.o [5]
+os_lock                 0x1000154c    0x1  Data  Lc  rt_System.o [5]
+os_maxtaskrun           0x00000ea6    0x2  Data  Gb  RTX_Conf_CM.o [1]
+os_messageQ_def_osTimerMessageQ
+                        0x00002dd8    0x8  Data  Gb  RTX_Conf_CM.o [1]
+os_messageQ_q_osTimerMessageQ
+                        0x1000151c   0x20  Data  Gb  RTX_Conf_CM.o [1]
+os_mutex_cb_mut_GLCD    0x1000153c   0x10  Data  Gb  main.o [1]
+os_mutex_def_mut_GLCD   0x00002de8    0x4  Data  Gb  main.o [1]
+os_psh_flag             0x1000154d    0x1  Data  Lc  rt_System.o [5]
+os_rdy                  0x100014e4   0x18  Data  Gb  rt_List.o [5]
+os_robin                0x10001554    0x8  Data  Gb  rt_Robin.o [5]
+os_rrobin               0x00002df0    0x4  Data  Gb  RTX_Conf_CM.o [1]
+os_running              0x1000159d    0x1  Data  Gb  rt_CMSIS.o [5]
+os_set_env              0x000016d9         Code  Gb  HAL_CM3.o [5]
+os_stack_mem            0x10001038  0x228  Data  Gb  RTX_Conf_CM.o [1]
+os_stack_sz             0x00002e0c    0x4  Data  Gb  RTX_Conf_CM.o [1]
+os_stackinfo            0x00002dec    0x4  Data  Gb  RTX_Conf_CM.o [1]
+os_thread_def_clock     0x00002d64   0x10  Data  Gb  main.o [1]
+os_thread_def_lcd       0x00002d74   0x10  Data  Gb  main.o [1]
+os_thread_def_main      0x00002d94   0x10  Data  Gb  RTX_Conf_CM.o [1]
+os_thread_def_osTimerThread
+                        0x00002d84   0x10  Data  Gb  RTX_Conf_CM.o [1]
+os_thread_def_phaseA    0x00002d24   0x10  Data  Gb  main.o [1]
+os_thread_def_phaseB    0x00002d34   0x10  Data  Gb  main.o [1]
+os_thread_def_phaseC    0x00002d44   0x10  Data  Gb  main.o [1]
+os_thread_def_phaseD    0x00002d54   0x10  Data  Gb  main.o [1]
+os_tick_init            0x00001909   0x2c  Code  Wk  rt_System.o [5]
+os_tick_irqack          0x0000196b    0x2  Code  Wk  rt_System.o [5]
+os_tick_irqn            0x10001550    0x4  Data  Gb  rt_System.o [5]
+os_time                 0x10001598    0x4  Data  Gb  rt_Time.o [5]
+os_timer_head           0x10001584    0x4  Data  Gb  rt_CMSIS.o [5]
+os_timernum             0x00002e04    0x4  Data  Gb  RTX_Conf_CM.o [1]
+os_trv                  0x00002df4    0x4  Data  Gb  RTX_Conf_CM.o [1]
+os_tsk                  0x100014c4    0x8  Data  Gb  rt_Task.o [5]
+out                     0x00002aed   0x18  Code  Lc  xprintftiny.o [6]
+pend_flags              0x1000154e    0x1  Data  Lc  rt_System.o [5]
+phaseA                  0x000025f1   0x24  Code  Gb  main.o [1]
+phaseB                  0x00002615   0x24  Code  Gb  main.o [1]
+phaseC                  0x00002639   0x24  Code  Gb  main.o [1]
+phaseD                  0x0000265d   0x24  Code  Gb  main.o [1]
+rt_alloc_box            0x00001689   0x1a  Code  Gb  rt_MemBox.o [5]
+rt_alloc_mem            0x0000098f   0x48  Code  Gb  rt_Memory.o [5]
+rt_block                0x00000a75   0x2c  Code  Gb  rt_Task.o [5]
+rt_chk_robin            0x000019a5   0x48  Code  Wk  rt_Robin.o [5]
+rt_dec_dly              0x00001521   0x68  Code  Gb  rt_List.o [5]
+rt_dispatch             0x00000a37   0x3e  Code  Gb  rt_Task.o [5]
+rt_dly_wait             0x00000ea1    0x6  Code  Gb  rt_Time.o [5]
+rt_evt_psh              0x0000117d   0x50  Code  Gb  rt_Event.o [5]
+rt_evt_set              0x00001105   0x56  Code  Gb  rt_Event.o [5]
+rt_evt_wait             0x000010cd   0x38  Code  Gb  rt_Event.o [5]
+rt_free_box             0x000016a3   0x28  Code  Gb  rt_MemBox.o [5]
+rt_free_mem             0x000009d7   0x34  Code  Gb  rt_Memory.o [5]
+rt_get_PSP              0x000016d3         Code  Gb  HAL_CM3.o [5]
+rt_get_first            0x0000146f   0x2a  Code  Gb  rt_List.o [5]
+rt_init_mem             0x00000975   0x1a  Code  Gb  rt_Memory.o [5]
+rt_init_robin           0x00001815   0x18  Code  Wk  rt_Robin.o [5]
+rt_init_stack           0x0000132d   0x7a  Code  Gb  HAL_CM.o [5]
+rt_mbx_check            0x00000f81    0xa  Code  Gb  rt_Mailbox.o [5]
+rt_mbx_init             0x00000eb9   0x1a  Code  Gb  rt_Mailbox.o [5]
+rt_mbx_psh              0x00000f99   0xe4  Code  Gb  rt_Mailbox.o [5]
+rt_mbx_wait             0x00000ed3   0xae  Code  Gb  rt_Mailbox.o [5]
+rt_ms2tick              0x00000301   0x3c  Code  Lc  rt_CMSIS.o [5]
+rt_mut_init             0x000011dd   0x10  Code  Gb  rt_Mutex.o [5]
+rt_mut_release          0x000011ed   0xc6  Code  Gb  rt_Mutex.o [5]
+rt_mut_wait             0x000012b3   0x70  Code  Gb  rt_Mutex.o [5]
+rt_pop_req              0x00001853   0x68  Code  Gb  rt_System.o [5]
+rt_psh_req              0x0000183d   0x16  Code  Gb  rt_System.o [5]
+rt_psq_enq              0x000015d7   0x48  Code  Gb  rt_List.o [5]
+rt_put_dly              0x000014d3   0x4e  Code  Gb  rt_List.o [5]
+rt_put_prio             0x00001431   0x3e  Code  Gb  rt_List.o [5]
+rt_put_rdy_first        0x00001499    0xe  Code  Gb  rt_List.o [5]
+rt_resort_prio          0x000014a7   0x2c  Code  Gb  rt_List.o [5]
+rt_ret_val              0x000013a7    0x8  Code  Gb  HAL_CM.o [5]
+rt_ret_val2             0x000013af    0xa  Code  Gb  HAL_CM.o [5]
+rt_rmv_dly              0x000015af   0x28  Code  Gb  rt_List.o [5]
+rt_rmv_list             0x00001589   0x26  Code  Gb  rt_List.o [5]
+rt_sem_psh              0x0000196d   0x30  Code  Gb  rt_Semaphore.o [5]
+rt_set_PSP              0x000016cd         Code  Gb  HAL_CM3.o [5]
+rt_stk_check            0x000017f1   0x24  Code  Wk  rt_System.o [5]
+rt_switch_req           0x00000a15   0x22  Code  Gb  rt_Task.o [5]
+rt_sys_init             0x00000d35   0xae  Code  Gb  rt_Task.o [5]
+rt_sys_start            0x00000de5   0x68  Code  Gb  rt_Task.o [5]
+rt_systick              0x000018bb   0x32  Code  Gb  rt_System.o [5]
+rt_tid2ptcb             0x0000033d   0x10  Code  Lc  rt_CMSIS.o [5]
+rt_timer_insert         0x00000599   0x32  Code  Lc  rt_CMSIS.o [5]
+rt_tsk_create           0x00000b2b   0xa4  Code  Gb  rt_Task.o [5]
+rt_tsk_delete           0x00000bcf  0x160  Code  Gb  rt_Task.o [5]
+rt_tsk_prio             0x00000ab3   0x78  Code  Gb  rt_Task.o [5]
+rt_tsk_self             0x00000aa7    0xc  Code  Gb  rt_Task.o [5]
+runInitSequence         0x00001ad3   0xd0  Code  Lc  oled.o [3]
+shadowFB                0x10000d38  0x300  Data  Lc  oled.o [3]
+signal_func             0x000025b1   0x40  Code  Gb  main.o [1]
+sprintf                 0x00002805   0x40  Code  Gb  sprintf.o [6]
+strlen                  0x00002c2d         Code  Gb  strlen.o [7]
+svcDelay                0x0000056f   0x14  Code  Gb  rt_CMSIS.o [5]
+svcKernelInitialize     0x0000034d   0x60  Code  Gb  rt_CMSIS.o [5]
+svcKernelStart          0x000003ad   0x40  Code  Gb  rt_CMSIS.o [5]
+svcMessageCreate        0x000008c1   0x26  Code  Gb  rt_CMSIS.o [5]
+svcMessageGet           0x000008e7   0x54  Code  Gb  rt_CMSIS.o [5]
+svcMessageGet_          0x000008a9   0x18  Code  Gb  rt_CMSIS.o [5]
+svcMutexCreate          0x000007a7   0x1e  Code  Gb  rt_CMSIS.o [5]
+svcMutexRelease         0x00000801   0x24  Code  Gb  rt_CMSIS.o [5]
+svcMutexWait            0x000007c5   0x3c  Code  Gb  rt_CMSIS.o [5]
+svcSignalSet            0x0000069d   0x20  Code  Gb  rt_CMSIS.o [5]
+svcSignalWait           0x000006c3   0x6a  Code  Gb  rt_CMSIS.o [5]
+svcSignalWait_          0x00000685   0x18  Code  Gb  rt_CMSIS.o [5]
+svcThreadCreate         0x0000047d   0x68  Code  Gb  rt_CMSIS.o [5]
+svcThreadGetId          0x000004e5   0x16  Code  Gb  rt_CMSIS.o [5]
+svcThreadTerminate      0x000004fb   0x34  Code  Gb  rt_CMSIS.o [5]
+svcTimerCall            0x000005cb   0x18  Code  Gb  rt_CMSIS.o [5]
+sysTimerTick            0x000005e3   0x62  Code  Gb  rt_CMSIS.o [5]
+tid_clock               0x1000156c    0x4  Data  Gb  main.o [1]
+tid_lcd                 0x10001570    0x4  Data  Gb  main.o [1]
+tid_phaseA              0x1000155c    0x4  Data  Gb  main.o [1]
+tid_phaseB              0x10001560    0x4  Data  Gb  main.o [1]
+tid_phaseC              0x10001564    0x4  Data  Gb  main.o [1]
+tid_phaseD              0x10001568    0x4  Data  Gb  main.o [1]
+writeCommand            0x00001a41   0x2a  Code  Lc  oled.o [3]
+writeData               0x00001a6b   0x2a  Code  Lc  oled.o [3]
+writeDataLen            0x00001a95   0x3e  Code  Lc  oled.o [3]
+
+
+[1] = C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\CMSIS_RTOS_IAR8\blinky\Debug\Obj
+[2] = command line
+[3] = Lib_EaBaseBoard.a
+[4] = Lib_MCU.a
+[5] = RTX_Lib_CM.a
+[6] = dl7M_tln.a
+[7] = rt7M_tl.a
+[8] = shb_l.a
+
+  10 368 bytes of readonly  code memory
+   1 064 bytes of readonly  data memory
+   6 559 bytes of readwrite data memory
+
+Errors: none
+Warnings: none
