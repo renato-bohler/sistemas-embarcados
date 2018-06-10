@@ -213,6 +213,7 @@
                     <name>CCDefines</name>
                     <state>ewarm</state>
                     <state>PART_TM4C1294NCPDT</state>
+                    <state>TARGET_IS_TM4C129_RA0</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>

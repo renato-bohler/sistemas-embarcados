@@ -1,7 +1,7 @@
-/**
- * Exemplo de como enviar strings por fila de correspondência
- **/
-#include <stdio.h>
+#include <stdbool.h>
+#include "cmsis_os.h"
+#include "system_tm4c1294ncpdt.h" // CMSIS-Core
+#include "driverleds.h" // device drivers
 #include <stdint.h>
 #include <stdbool.h>
 #include "inc/hw_ints.h"
@@ -14,56 +14,18 @@
 #include "driverlib/rom_map.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/uart.h"
-#include "cmsis_os.h"
-#include "system_tm4c1294ncpdt.h" // CMSIS-Core
-#include "driverleds.h"           // device drivers
-#define QUEUE_LIMIT 16
 
-osThreadId send_thread_id;
-osThreadId recv_thread_id;
-
-void send_thread(void const *argument);
-void recv_thread(void const *argument);
-
-osThreadDef(send_thread, osPriorityNormal, 1, 0);
-osThreadDef(recv_thread, osPriorityNormal, 1, 0);
-
-osMailQDef(mqueue, QUEUE_LIMIT, char);
-osMailQId mqueue;
-
-void send_thread(void const *argument)
-{
-  char *message = osMailAlloc(mqueue, osWaitForever);
-  message = "initialized\n";
-  osMailPut(mqueue, message);
-
-  message = osMailAlloc(mqueue, osWaitForever);
-  message = "eA\n";
-  osMailPut(mqueue, message);
-
-  message = osMailAlloc(mqueue, osWaitForever);
-  message = "d09s\n";
-  osMailPut(mqueue, message);
-
-  osThreadYield();
-}
-
-void recv_thread(void const *argument)
-{
-  char *message;
-  osEvent event;
-
-  while (1)
-  {
-    event = osMailGet(mqueue, osWaitForever);
-    if (event.status == osEventMail)
-    {
-      message = event.value.p;
-      printf("%s", message);
-      osMailFree(mqueue, message);
-    }
-  }
-}
+//*****************************************************************************
+//
+//! \addtogroup example_list
+//! <h1>UART Echo (uart_echo)</h1>
+//!
+//! This example application utilizes the UART to echo text.  The first UART
+//! (connected to the USB debug virtual serial port on the evaluation board)
+//! will be configured in 115,200 baud, 8-n-1 mode.  All characters received on
+//! the UART are transmitted back to the UART.
+//
+//*****************************************************************************
 
 //****************************************************************************
 //
@@ -107,9 +69,8 @@ UARTIntHandler(void)
     //
     // Loop while there are characters in the receive FIFO.
     //
-    while(ROM_UARTCharsAvail(UART0_BASE))
+    /*while(ROM_UARTCharsAvail(UART0_BASE))
     {
-        // eA\xDcA
         //
         // Read the next character from the UART and write it back to the UART.
         //
@@ -130,7 +91,7 @@ UARTIntHandler(void)
         // Turn off the LED
         //
         GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, 0);
-    }
+    }*/
 }
 
 //*****************************************************************************
@@ -153,12 +114,32 @@ UARTSend(const uint8_t *pui8Buffer, uint32_t ui32Count)
     }
 }
 
-void main(void)
-{
-   g_ui32SysClock = MAP_SysCtlClockFreqSet((SYSCTL_XTAL_25MHZ |
-                                           SYSCTL_OSC_MAIN |
-                                           SYSCTL_USE_PLL |
-                                           SYSCTL_CFG_VCO_480), 120000000);
+osThreadId thread1_id;
+void thread1(void const *argument);
+osThreadDef(thread1, osPriorityNormal, 1, 0);
+
+void thread1(void const *argument){
+  while(1){
+    LEDOn(LED1);
+    osDelay(1500);
+    /*UARTSend((uint8_t *)"dr\xD", 4);
+    LEDOff(LED1);
+    osDelay(1500);
+    UARTSend((uint8_t *)"er\xD", 4);
+    LEDOn(LED1);
+    osDelay(1500);
+    UARTSend((uint8_t *)"cr\xD", 4);*/
+    LEDOff(LED1);
+    osDelay(1500);
+  } // while
+} // thread1
+
+void main(void){
+  
+  g_ui32SysClock = MAP_SysCtlClockFreqSet((SYSCTL_XTAL_25MHZ |
+                                             SYSCTL_OSC_MAIN |
+                                             SYSCTL_USE_PLL |
+                                             SYSCTL_CFG_VCO_480), 120000000);
   //
   // Enable the GPIO port that is used for the on-board LED.
   //
@@ -199,18 +180,20 @@ void main(void)
   //
   ROM_IntEnable(INT_UART0);
   ROM_UARTIntEnable(UART0_BASE, UART_INT_RX | UART_INT_RT);
-
-  UARTSend((uint8_t *)"cr\xD", 4);
-  
+  //
+  // Loop forever echoing data through the UART.
+  //
   osKernelInitialize();
-
+  
   SystemInit();
-
-  send_thread_id = osThreadCreate(osThread(send_thread), NULL);
-  recv_thread_id = osThreadCreate(osThread(recv_thread), NULL);
-
-  mqueue = osMailCreate(osMailQ(mqueue), NULL);
+  LEDInit(LED1);
+  
+  thread1_id = osThreadCreate(osThread(thread1), NULL);
 
   osKernelStart();
+  
   osDelay(osWaitForever);
-}
+  while(1)
+    {
+    }
+} // main

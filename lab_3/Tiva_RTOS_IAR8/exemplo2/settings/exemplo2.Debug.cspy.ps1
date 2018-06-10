@@ -23,9 +23,9 @@ param([String]$debugfile = "");
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "D:\aulas\EL68E_SE\install_IAR8\Tiva_RTOS_IAR8\exemplo2\settings\exemplo2.Debug.general.xcl" --backend -f "D:\aulas\EL68E_SE\install_IAR8\Tiva_RTOS_IAR8\exemplo2\settings\exemplo2.Debug.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo2\settings\exemplo2.Debug.general.xcl" --backend -f "C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo2\settings\exemplo2.Debug.driver.xcl" 
 }
 else
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "D:\aulas\EL68E_SE\install_IAR8\Tiva_RTOS_IAR8\exemplo2\settings\exemplo2.Debug.general.xcl" --debug_file=$debugfile --backend -f "D:\aulas\EL68E_SE\install_IAR8\Tiva_RTOS_IAR8\exemplo2\settings\exemplo2.Debug.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo2\settings\exemplo2.Debug.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo2\settings\exemplo2.Debug.driver.xcl" 
 }

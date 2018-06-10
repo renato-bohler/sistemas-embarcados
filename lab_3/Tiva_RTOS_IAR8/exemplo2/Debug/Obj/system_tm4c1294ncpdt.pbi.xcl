@@ -1,16 +1,16 @@
-"D:\aulas\EL68E_SE\install_IAR8\Tiva_RTOS_IAR8\exemplo2\src\system_tm4c1294ncpdt.c"
+"C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo2\src\system_tm4c1294ncpdt.c"
 -std=c11
 -ferror-limit=0
 -I
-D:\aulas\EL68E_SE\install_IAR8\Tiva_RTOS_IAR8\exemplo2\..\..\..
+C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo2\..\..\..
 -I
-D:\aulas\EL68E_SE\install_IAR8\Tiva_RTOS_IAR8\exemplo2\..
+C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo2\..
 -I
-D:\aulas\EL68E_SE\install_IAR8\Tiva_RTOS_IAR8\exemplo2\..\inc
+C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo2\..\inc
 -I
-D:\aulas\EL68E_SE\install_IAR8\Tiva_RTOS_IAR8\exemplo2\..\driverlib
+C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo2\..\driverlib
 -I
-D:\aulas\EL68E_SE\install_IAR8\Tiva_RTOS_IAR8\exemplo2\..\RTOS\RTX\INC
+C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo2\..\RTOS\RTX\INC
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\CMSIS\Include
 -I
@@ -18,15 +18,15 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc\c
 -I
-D:\aulas\EL68E_SE
+C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados
 -I
-D:\aulas\EL68E_SE\install_IAR8\Tiva_RTOS_IAR8
+C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8
 -I
-D:\aulas\EL68E_SE\install_IAR8\Tiva_RTOS_IAR8\inc
+C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\inc
 -I
-D:\aulas\EL68E_SE\install_IAR8\Tiva_RTOS_IAR8\driverlib
+C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\driverlib
 -I
-D:\aulas\EL68E_SE\install_IAR8\Tiva_RTOS_IAR8\RTOS\RTX\INC
+C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\RTOS\RTX\INC
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\CMSIS\Include
 -D__CHAR_BITS__=8

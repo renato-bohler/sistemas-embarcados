@@ -68,6 +68,7 @@ extern void PendSV_Handler(void); // Handler declared in HAL_CMx.s (RTX)
 extern void SysTick_Handler(void); // Handler declared in HAL_CMx.s (RTX)
 static void IntDefaultHandler(void);
 
+
 extern void UARTIntHandler(void);
 
 //*****************************************************************************
@@ -96,8 +97,6 @@ typedef union{
     uint32_t ui32Ptr;
 } // union
 uVectorEntry;
-
-
 
 //*****************************************************************************
 //

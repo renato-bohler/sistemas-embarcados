@@ -16,7 +16,7 @@
         <ShowSource>1</ShowSource>
     </Trace1>
     <DebugChecksum>
-        <Checksum>14713174</Checksum>
+        <Checksum>616993117</Checksum>
     </DebugChecksum>
     <CodeCoverage>
         <Enabled>_ 0</Enabled>
@@ -39,6 +39,10 @@
     <CallStack>
         <ShowArgs>0</ShowArgs>
     </CallStack>
+    <LMIFTDIDriver>
+        <LMIFTDIserialNo>0F00AB8A</LMIFTDIserialNo>
+        <LMIFTDIfoundProbes />
+    </LMIFTDIDriver>
     <InterruptLog>
         <LogEnabled>0</LogEnabled>
         <GraphEnabled>0</GraphEnabled>
@@ -72,10 +76,6 @@
         <FreqHi>0</FreqHi>
         <MultiCoreRunAll>1</MultiCoreRunAll>
     </Simulator>
-    <LMIFTDIDriver>
-        <LMIFTDIserialNo>0F0089E5</LMIFTDIserialNo>
-        <LMIFTDIfoundProbes />
-    </LMIFTDIDriver>
     <LogFile>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
@@ -95,7 +95,11 @@
         <mode>0</mode>
     </DisassembleMode>
     <Breakpoints>
-        <Count>0</Count>
+        <Bp0>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.189.3" 1 0 0 0 "" 0 ""</Bp0>
+        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.132.5" 1 0 0 0 "" 0 ""</Bp1>
+        <Bp2>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.132.5" 1 0 0 0 "" 0 ""</Bp2>
+        <Bp3>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.132.5" 1 0 0 0 "" 0 ""</Bp3>
+        <Count>4</Count>
     </Breakpoints>
     <Aliases>
         <Count>0</Count>
