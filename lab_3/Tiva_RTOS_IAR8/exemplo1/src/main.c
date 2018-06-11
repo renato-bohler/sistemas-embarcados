@@ -122,13 +122,13 @@ void thread1(void const *argument){
   while(1){
     LEDOn(LED1);
     osDelay(1500);
-    /*UARTSend((uint8_t *)"dr\xD", 4);
+    UARTSend((uint8_t *)"dr\xD", 3);
     LEDOff(LED1);
     osDelay(1500);
-    UARTSend((uint8_t *)"er\xD", 4);
+    UARTSend((uint8_t *)"er\xD", 3);
     LEDOn(LED1);
     osDelay(1500);
-    UARTSend((uint8_t *)"cr\xD", 4);*/
+    UARTSend((uint8_t *)"cr\xD", 3);
     LEDOff(LED1);
     osDelay(1500);
   } // while
