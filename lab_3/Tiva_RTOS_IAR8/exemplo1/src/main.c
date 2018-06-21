@@ -1,9 +1,9 @@
-#include <stdbool.h>
 #include "cmsis_os.h"
 #include "system_tm4c1294ncpdt.h" // CMSIS-Core
 #include "driverleds.h" // device drivers
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include "inc/hw_ints.h"
 #include "inc/hw_memmap.h"
 #include "driverlib/debug.h"
@@ -14,6 +14,20 @@
 #include "driverlib/rom_map.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/uart.h"
+#define QUEUE_LIMIT 64
+
+typedef struct {
+  char* conteudo;
+} mensagem;
+
+osThreadId thread1_id;
+void thread1(void const *argument);
+osThreadDef(thread1, osPriorityNormal, 1, 0);
+osMailQDef(mqueue, QUEUE_LIMIT, mensagem);
+osMailQId mqueue_id;
+
+
+
 
 //*****************************************************************************
 //
@@ -69,29 +83,30 @@ UARTIntHandler(void)
     //
     // Loop while there are characters in the receive FIFO.
     //
-    /*while(ROM_UARTCharsAvail(UART0_BASE))
+    if (!ROM_UARTCharsAvail(UART0_BASE)) return;
+    int i = 0;
+    char msg[11] = "";
+    while(ROM_UARTCharsAvail(UART0_BASE))
     {
-        //
-        // Read the next character from the UART and write it back to the UART.
-        //
-        ROM_UARTCharPutNonBlocking(UART0_BASE,
-                                   ROM_UARTCharGetNonBlocking(UART0_BASE));
-
-        //
-        // Blink the LED to show a character transfer is occuring.
-        //
-        GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, GPIO_PIN_0);
-
-        //
-        // Delay for 1 millisecond.  Each SysCtlDelay is about 3 clocks.
-        //
-        SysCtlDelay(g_ui32SysClock / (1000 * 3));
-
-        //
-        // Turn off the LED
-        //
-        GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, 0);
-    }*/
+        char letra = ROM_UARTCharGetNonBlocking(UART0_BASE);
+        if (letra == '\n') {
+          return;
+        } else if(letra == '\xD'){
+          msg[i] = '\0';
+          break;
+        } else {
+          msg[i] = letra;
+          i++;
+        }
+    }
+    mensagem *message;
+    message = (mensagem *) osMailAlloc(mqueue_id, 0);
+    message->conteudo = msg;
+    if (msg == "") {
+      printf("Msg vazia\n");
+    }
+    printf("%s\n", message->conteudo);
+    osMailPut(mqueue_id, message);
 }
 
 //*****************************************************************************
@@ -99,40 +114,42 @@ UARTIntHandler(void)
 // Send a string to the UART.
 //
 //*****************************************************************************
-void
-UARTSend(const uint8_t *pui8Buffer, uint32_t ui32Count)
+/**void
+UARTSend(const char *pui8Buffer)
 {
     //
     // Loop while there are more characters to send.
     //
-    while(ui32Count--)
+    while(*pui8Buffer != '\0')
     {
         //
         // Write the next character to the UART.
         //
         ROM_UARTCharPutNonBlocking(UART0_BASE, *pui8Buffer++);
     }
-}
+    ROM_UARTCharPutNonBlocking(UART0_BASE, '\xD');
+}*/
 
-osThreadId thread1_id;
-void thread1(void const *argument);
-osThreadDef(thread1, osPriorityNormal, 1, 0);
 
-void thread1(void const *argument){
-  while(1){
-    LEDOn(LED1);
-    osDelay(1500);
-    UARTSend((uint8_t *)"dr\xD", 3);
-    LEDOff(LED1);
-    osDelay(1500);
-    UARTSend((uint8_t *)"er\xD", 3);
-    LEDOn(LED1);
-    osDelay(1500);
-    UARTSend((uint8_t *)"cr\xD", 3);
-    LEDOff(LED1);
-    osDelay(1500);
-  } // while
-} // thread1
+
+/*void thread1(void const *argument){
+  mensagem *message;
+  osEvent event;
+
+  while (1)
+  {
+    printf("em cima do event\n");
+    event = osMailGet(mqueue_id, osWaitForever);
+    printf("depois do event\n");
+    if (event.status == osEventMail)
+    {
+      printf("if1\n");
+      message = (mensagem *)event.value.p;
+      printf("%s", message->conteudo);
+      osMailFree(mqueue_id, message);
+    }
+  }
+} // thread1*/
 
 void main(void){
   
@@ -188,12 +205,26 @@ void main(void){
   SystemInit();
   LEDInit(LED1);
   
-  thread1_id = osThreadCreate(osThread(thread1), NULL);
+  //thread1_id = osThreadCreate(osThread(thread1), NULL);
+  mqueue_id = osMailCreate(osMailQ(mqueue), NULL);
 
   osKernelStart();
   
-  osDelay(osWaitForever);
-  while(1)
+  //osDelay(osWaitForever);
+  mensagem *message;
+  osEvent event;
+
+  while (1)
+  {
+    printf("em cima do event\n");
+    event = osMailGet(mqueue_id, osWaitForever);
+    printf("depois do event\n");
+    if (event.status == osEventMail)
     {
+      printf("if1\n");
+      message = (mensagem *)event.value.p;
+      printf("%s", message->conteudo);
+      osMailFree(mqueue_id, message);
     }
+  }
 } // main
