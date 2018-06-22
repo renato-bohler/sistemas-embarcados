@@ -3,6 +3,7 @@
 #include "driverleds.h" // device drivers
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 #include <stdio.h>
 #include "inc/hw_ints.h"
 #include "inc/hw_memmap.h"
@@ -17,14 +18,16 @@
 #define QUEUE_LIMIT 64
 
 typedef struct {
-  char* conteudo;
+  char conteudo[16];
 } mensagem;
 
-osThreadId thread1_id;
+osThreadId thread1_id, thread_broker_id;
 void thread1(void const *argument);
+void thread_broker ();
 osThreadDef(thread1, osPriorityNormal, 1, 0);
+osThreadDef(thread_broker, osPriorityAboveNormal, 1, 0);
 osMailQDef(mqueue, QUEUE_LIMIT, mensagem);
-osMailQId mqueue_id;
+osMailQId mqueue;
 
 
 
@@ -68,45 +71,18 @@ __error__(char *pcFilename, uint32_t ui32Line)
 void
 UARTIntHandler(void)
 {
-    uint32_t ui32Status;
+   uint32_t ui32Status;
 
-    //
-    // Get the interrrupt status.
-    //
-    ui32Status = ROM_UARTIntStatus(UART0_BASE, true);
-
-    //
-    // Clear the asserted interrupts.
-    //
-    ROM_UARTIntClear(UART0_BASE, ui32Status);
-
-    //
-    // Loop while there are characters in the receive FIFO.
-    //
-    if (!ROM_UARTCharsAvail(UART0_BASE)) return;
-    int i = 0;
-    char msg[11] = "";
-    while(ROM_UARTCharsAvail(UART0_BASE))
-    {
-        char letra = ROM_UARTCharGetNonBlocking(UART0_BASE);
-        if (letra == '\n') {
-          return;
-        } else if(letra == '\xD'){
-          msg[i] = '\0';
-          break;
-        } else {
-          msg[i] = letra;
-          i++;
-        }
-    }
-    mensagem *message;
-    message = (mensagem *) osMailAlloc(mqueue_id, 0);
-    message->conteudo = msg;
-    if (msg == "") {
-      printf("Msg vazia\n");
-    }
-    printf("%s\n", message->conteudo);
-    osMailPut(mqueue_id, message);
+  //
+  // Get the interrrupt status.
+  //
+  ui32Status = ROM_UARTIntStatus(UART0_BASE, true);
+  //
+  // Clear the asserted interrupts.
+  //
+  ROM_UARTIntClear(UART0_BASE, ui32Status);
+  
+  osSignalSet(thread_broker_id, 0x1);
 }
 
 //*****************************************************************************
@@ -114,7 +90,7 @@ UARTIntHandler(void)
 // Send a string to the UART.
 //
 //*****************************************************************************
-/**void
+void
 UARTSend(const char *pui8Buffer)
 {
     //
@@ -128,28 +104,61 @@ UARTSend(const char *pui8Buffer)
         ROM_UARTCharPutNonBlocking(UART0_BASE, *pui8Buffer++);
     }
     ROM_UARTCharPutNonBlocking(UART0_BASE, '\xD');
-}*/
+}
+
+void thread_broker(){
+  osEvent evt = osSignalWait(0x1,osWaitForever);
+  if (evt.status == osEventSignal){
+
+      //
+      // Loop while there are characters in the receive FIFO.
+      //
+      if (!ROM_UARTCharsAvail(UART0_BASE)) {
+        ROM_UARTIntEnable(UART0_BASE, UART_INT_RX | UART_INT_RT);
+        return;
+      }
+      
+      mensagem *message;
+      message = (mensagem *) osMailAlloc(mqueue, osWaitForever);
+        
+      int i = 0;
+      while(ROM_UARTCharsAvail(UART0_BASE))
+      {
+          char letra = ROM_UARTCharGetNonBlocking(UART0_BASE);
+          if (letra == '\n') {
+            break;
+          } else if(letra == '\xD'){
+            message->conteudo[i] = '\0';
+          } else {
+            message->conteudo[i] = letra;
+            i++;
+          }
+      }
+      
+      osMailPut(mqueue, message);
+      ROM_UARTIntEnable(UART0_BASE, UART_INT_RX | UART_INT_RT);
+  }
+}
 
 
-
-/*void thread1(void const *argument){
+void thread1(void const *argument){
   mensagem *message;
   osEvent event;
+  //int pedroni;
 
   while (1)
   {
-    printf("em cima do event\n");
-    event = osMailGet(mqueue_id, osWaitForever);
-    printf("depois do event\n");
+    event = osMailGet(mqueue, osWaitForever);
     if (event.status == osEventMail)
     {
-      printf("if1\n");
       message = (mensagem *)event.value.p;
-      printf("%s", message->conteudo);
-      osMailFree(mqueue_id, message);
+      /*if (strcmp(message->conteudo, "cIa") == 0) {
+        pedroni = 2;
+      }*/
+      osMailFree(mqueue, message);
     }
   }
-} // thread1*/
+} // thread1
 
 void main(void){
   
@@ -157,15 +166,6 @@ void main(void){
                                              SYSCTL_OSC_MAIN |
                                              SYSCTL_USE_PLL |
                                              SYSCTL_CFG_VCO_480), 120000000);
-  //
-  // Enable the GPIO port that is used for the on-board LED.
-  //
-  ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPION);
-
-  //
-  // Enable the GPIO pins for the LED (PN0).
-  //
-  ROM_GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, GPIO_PIN_0);
 
   //
   // Enable the peripherals used by this example.
@@ -197,34 +197,14 @@ void main(void){
   //
   ROM_IntEnable(INT_UART0);
   ROM_UARTIntEnable(UART0_BASE, UART_INT_RX | UART_INT_RT);
-  //
-  // Loop forever echoing data through the UART.
-  //
+
   osKernelInitialize();
   
-  SystemInit();
-  LEDInit(LED1);
-  
-  //thread1_id = osThreadCreate(osThread(thread1), NULL);
-  mqueue_id = osMailCreate(osMailQ(mqueue), NULL);
+  thread1_id = osThreadCreate(osThread(thread1), NULL);
+  thread_broker_id = osThreadCreate(osThread(thread_broker), NULL);
+  mqueue = osMailCreate(osMailQ(mqueue), NULL);
 
   osKernelStart();
   
-  //osDelay(osWaitForever);
-  mensagem *message;
-  osEvent event;
-
-  while (1)
-  {
-    printf("em cima do event\n");
-    event = osMailGet(mqueue_id, osWaitForever);
-    printf("depois do event\n");
-    if (event.status == osEventMail)
-    {
-      printf("if1\n");
-      message = (mensagem *)event.value.p;
-      printf("%s", message->conteudo);
-      osMailFree(mqueue_id, message);
-    }
-  }
+  osDelay(osWaitForever);
 } // main
