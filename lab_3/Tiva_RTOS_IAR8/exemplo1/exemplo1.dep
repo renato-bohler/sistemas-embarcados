@@ -5,18 +5,18 @@
     <configuration>
         <name>Debug</name>
         <outputs>
-            <file>$PROJ_DIR$\..\RTOS\RTX\LIB\IAR\RTX_CM4.a</file>
-            <file>$PROJ_DIR$\src\startup_tm4c1294ncpdt.c</file>
             <file>$PROJ_DIR$\src\driverleds.c</file>
+            <file>$PROJ_DIR$\src\driverleds.h</file>
+            <file>$PROJ_DIR$\..\driverlib\ewarm\Exe\driverlib.a</file>
+            <file>$PROJ_DIR$\src\main.c</file>
+            <file>$PROJ_DIR$\..\RTOS\RTX\LIB\IAR\RTX_CM4.a</file>
             <file>$PROJ_DIR$\src\RTX_Conf_CM.c</file>
+            <file>$PROJ_DIR$\src\startup_tm4c1294ncpdt.c</file>
             <file>$PROJ_DIR$\src\system_tm4c1294ncpdt.c</file>
             <file>$PROJ_DIR$\..\driverlib\sysctl.h</file>
             <file>$PROJ_DIR$\..\driverlib\pin_map.h</file>
-            <file>$PROJ_DIR$\src\main.c</file>
             <file>$PROJ_DIR$\ewarm\Obj\driverleds.o</file>
-            <file>$PROJ_DIR$\..\driverlib\ewarm\Exe\driverlib.a</file>
             <file>$TOOLKIT_DIR$\lib\m7M_tls.a</file>
-            <file>$PROJ_DIR$\src\driverleds.h</file>
             <file>$TOOLKIT_DIR$\inc\c\stddef.h</file>
             <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
             <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
@@ -62,48 +62,32 @@
             <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</file>
             <file>$PROJ_DIR$\ewarm\Obj\startup_tm4c1294ncpdt.o</file>
             <file>$PROJ_DIR$\ewarm\Obj\RTX_Conf_CM.pbi</file>
-            <file>$PROJ_DIR$\..\exemplo2\src\RTX_Conf_CM.c</file>
-            <file>$PROJ_DIR$\..\exemplo2\src\system_tm4c1294ncpdt.c</file>
             <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
             <file>$TOOLKIT_DIR$\inc\c\string.h</file>
+            <file>$PROJ_DIR$\..\RTOS\RTX\SRC\rt_CMSIS.c</file>
+            <file>$PROJ_DIR$\..\RTOS\RTX\SRC\rt_System.c</file>
+            <file>$TOOLKIT_DIR$\config\debugger\ARM\vector_catch.mac</file>
+            <file>$PROJ_DIR$\..\RTOS\RTX\SRC\rt_Event.c</file>
         </outputs>
         <file>
-            <name>$PROJ_DIR$\src\startup_tm4c1294ncpdt.c</name>
+            <name>[ROOT_NODE]</name>
             <outputs>
                 <tool>
-                    <name>ICCARM</name>
-                    <file> 55</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 44</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 45</file>
+                    <name>ILINK</name>
+                    <file> 50 32</file>
                 </tool>
             </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 52 14 24 13 54 19 28 16</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 54 16 14 19 28 24 13 52</file>
-                </tool>
-            </inputs>
         </file>
         <file>
             <name>$PROJ_DIR$\src\driverleds.c</name>
             <outputs>
                 <tool>
-                    <name>ICCARM</name>
-                    <file> 8</file>
-                </tool>
-                <tool>
                     <name>__cstat</name>
                     <file> 48</file>
+                </tool>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 10</file>
                 </tool>
                 <tool>
                     <name>BICOMP</name>
@@ -113,11 +97,38 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 37 52 14 24 13 54 19 29 5 41 11</file>
+                    <file> 37 52 14 24 13 54 19 29 8 41 1</file>
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 14 41 19 29 54 52 5 11 24 13 37</file>
+                    <file> 14 41 19 29 54 52 8 1 24 13 37</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\main.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 53</file>
+                </tool>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 30</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 46</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 15 52 14 24 13 54 19 12 39 40 1 37 58 57 26 27 29 23 41 35 9 42 21 8 17</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 52 24 17 29 37 9 14 1 26 41 21 12 13 39 40 58 27 23 35 42 8 54 19 57 15</file>
                 </tool>
             </inputs>
         </file>
@@ -125,12 +136,12 @@
             <name>$PROJ_DIR$\src\RTX_Conf_CM.c</name>
             <outputs>
                 <tool>
-                    <name>ICCARM</name>
-                    <file> 22</file>
-                </tool>
-                <tool>
                     <name>__cstat</name>
                     <file> 51</file>
+                </tool>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 22</file>
                 </tool>
                 <tool>
                     <name>BICOMP</name>
@@ -149,15 +160,42 @@
             </inputs>
         </file>
         <file>
+            <name>$PROJ_DIR$\src\startup_tm4c1294ncpdt.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 44</file>
+                </tool>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 55</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 45</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 52 14 24 13 54 19 28 16</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 54 16 14 19 28 24 13 52</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
             <name>$PROJ_DIR$\src\system_tm4c1294ncpdt.c</name>
             <outputs>
                 <tool>
-                    <name>ICCARM</name>
-                    <file> 38</file>
-                </tool>
-                <tool>
                     <name>__cstat</name>
                     <file> 49</file>
+                </tool>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 38</file>
                 </tool>
                 <tool>
                     <name>BICOMP</name>
@@ -167,49 +205,13 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 37 52 14 24 13 54 19 5</file>
+                    <file> 37 52 14 24 13 54 19 8</file>
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 5 24 13 52 14 54 19 37</file>
+                    <file> 8 24 13 52 14 54 19 37</file>
                 </tool>
             </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\src\main.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 30</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 53</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 46</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 15 52 14 24 13 54 19 12 39 40 11 37 60 59 26 27 29 23 41 35 6 42 21 5 17</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 17 14 29 37 6 24 52 11 26 41 21 12 13 39 40 60 27 23 35 42 5 54 19 59 15</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>[ROOT_NODE]</name>
-            <outputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 50 32</file>
-                </tool>
-            </outputs>
         </file>
         <file>
             <name>$PROJ_DIR$\ewarm\Exe\exemplo1.out</name>
@@ -226,7 +228,7 @@
             <inputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 43 8 9 30 0 22 55 38 31 36 10 18</file>
+                    <file> 43 10 2 30 4 22 55 38 31 36 11 18</file>
                 </tool>
             </inputs>
         </file>

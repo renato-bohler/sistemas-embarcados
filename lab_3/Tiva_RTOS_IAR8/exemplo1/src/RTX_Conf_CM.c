@@ -279,7 +279,6 @@ extern osThreadId svcThreadGetId (void);
 /// \brief Called when a runtime error is detected
 /// \param[in]   error_code   actual error code that has been detected
 void os_error (uint32_t error_code) {
-  printf("error_code: %d\nthread_id: %d\n", error_code, svcThreadGetId());
   /* HERE: include optional code to be executed on runtime error. */
   switch (error_code) {
     case OS_ERROR_STACK_OVF:

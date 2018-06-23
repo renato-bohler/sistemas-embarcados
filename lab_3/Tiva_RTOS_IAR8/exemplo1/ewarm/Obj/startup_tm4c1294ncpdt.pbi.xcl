@@ -1,16 +1,16 @@
-"C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo1\src\startup_tm4c1294ncpdt.c"
+"C:\Users\Renato\Downloads\emb\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo1\src\startup_tm4c1294ncpdt.c"
 -std=c11
 -ferror-limit=0
 -I
-C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo1\..\..\..
+C:\Users\Renato\Downloads\emb\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo1\..\..\..
 -I
-C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo1\..
+C:\Users\Renato\Downloads\emb\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo1\..
 -I
-C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo1\..\inc
+C:\Users\Renato\Downloads\emb\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo1\..\inc
 -I
-C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo1\..\driverlib
+C:\Users\Renato\Downloads\emb\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo1\..\driverlib
 -I
-C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo1\..\RTOS\RTX\INC
+C:\Users\Renato\Downloads\emb\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo1\..\RTOS\RTX\INC
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\CMSIS\Include
 -I
@@ -18,15 +18,15 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc\c
 -I
-C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados
+C:\Users\Renato\Downloads\emb\sistemas-embarcados
 -I
-C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8
+C:\Users\Renato\Downloads\emb\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8
 -I
-C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\inc
+C:\Users\Renato\Downloads\emb\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\inc
 -I
-C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\driverlib
+C:\Users\Renato\Downloads\emb\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\driverlib
 -I
-C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\RTOS\RTX\INC
+C:\Users\Renato\Downloads\emb\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\RTOS\RTX\INC
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\CMSIS\Include
 -D__CHAR_BITS__=8

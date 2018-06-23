@@ -16,7 +16,7 @@
         <ShowSource>1</ShowSource>
     </Trace1>
     <DebugChecksum>
-        <Checksum>1286470320</Checksum>
+        <Checksum>3419044246</Checksum>
     </DebugChecksum>
     <CodeCoverage>
         <Enabled>_ 0</Enabled>
@@ -40,7 +40,7 @@
         <ShowArgs>0</ShowArgs>
     </CallStack>
     <LMIFTDIDriver>
-        <LMIFTDIserialNo>0F008BE5</LMIFTDIserialNo>
+        <LMIFTDIserialNo>0F00AB8A</LMIFTDIserialNo>
         <LMIFTDIfoundProbes />
     </LMIFTDIDriver>
     <InterruptLog>
@@ -76,6 +76,25 @@
         <FreqHi>0</FreqHi>
         <MultiCoreRunAll>1</MultiCoreRunAll>
     </Simulator>
+    <BreakpointUsageDialog>
+        <Placement>_ 498 289 943 571</Placement>
+    </BreakpointUsageDialog>
+    <DisassembleMode>
+        <mode>0</mode>
+    </DisassembleMode>
+    <Breakpoints>
+        <Bp0>_ "STD_CODE" "{$PROJ_DIR$\..\driverlib\rom.h}.6596.1" 0 0 0 0 "" 0 ""</Bp0>
+        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\src}.165.3" 0 0 0 0 "" 0 ""</Bp1>
+        <Bp2>_ "STD_CODE" "{$PROJ_DIR$\src}.79.3" 0 0 0 0 "" 0 ""</Bp2>
+        <Bp3>_ "STD_CODE" "{$PROJ_DIR$\src\startup_tm4c1294ncpdt.c}.327.5" 1 0 0 0 "" 0 ""</Bp3>
+        <Bp4>_ "STD_CODE" "{$PROJ_DIR$\src\RTX_Conf_CM.c}.283.3" 0 0 0 0 "" 0 ""</Bp4>
+        <Bp5>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.250.7" 1 0 0 0 "" 0 ""</Bp5>
+        <Bp6>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.139.7" 1 0 0 0 "" 0 ""</Bp6>
+        <Bp7>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.109.3" 1 0 0 0 "" 0 ""</Bp7>
+        <Bp8>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.98.12" 1 0 0 0 "" 0 ""</Bp8>
+        <Bp9>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.272.7" 1 0 0 0 "" 0 ""</Bp9>
+        <Count>10</Count>
+    </Breakpoints>
     <LogFile>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
@@ -85,28 +104,17 @@
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
     </TermIOLog>
+    <Aliases>
+        <A0>_ "C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\RTOS\RTX\SRC\rt_CMSIS.c" ""</A0>
+        <A1>_ "C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\driverlib\gpio.c" "C:\Users\Renato\Downloads\emb\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\driverlib\gpio.c"</A1>
+        <A2>_ "C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo1\src\main.c" "C:\Users\Renato\Downloads\emb\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo1\src\main.c"</A2>
+        <Count>3</Count>
+        <SuppressDialog>1</SuppressDialog>
+    </Aliases>
     <CallStackLog>
         <Enabled>0</Enabled>
     </CallStackLog>
     <CallStackStripe>
         <ShowTiming>1</ShowTiming>
     </CallStackStripe>
-    <DisassembleMode>
-        <mode>0</mode>
-    </DisassembleMode>
-    <Breakpoints>
-        <Bp0>_ "STD_CODE" "{$PROJ_DIR$\..\driverlib\rom.h}.6596.1" 0 0 0 0 "" 0 ""</Bp0>
-        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.151.5" 1 0 0 0 "" 0 ""</Bp1>
-        <Bp2>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.154.7" 1 0 0 0 "" 0 ""</Bp2>
-        <Bp3>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.165.3" 1 0 0 0 "" 0 ""</Bp3>
-        <Bp4>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.158.7" 0 0 0 0 "" 0 ""</Bp4>
-        <Bp5>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.110.11" 1 0 0 0 "" 0 ""</Bp5>
-        <Bp6>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.79.3" 1 0 0 0 "" 0 ""</Bp6>
-        <Bp7>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.138.7" 0 0 0 0 "" 0 ""</Bp7>
-        <Count>8</Count>
-    </Breakpoints>
-    <Aliases>
-        <Count>0</Count>
-        <SuppressDialog>0</SuppressDialog>
-    </Aliases>
 </settings>

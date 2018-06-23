@@ -324,7 +324,6 @@ __weak static void HardFault_Handler(void){
     //
     // Enter an infinite loop.
     //
-    printf("HardFault_Handler\n");
     while(1){
     } // while
 } // HardFault_Handler
