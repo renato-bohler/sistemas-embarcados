@@ -23,7 +23,8 @@
 uint32_t g_ui32SysClock;
 
 // Struct da mensagem a ser trocada entre as tarefas
-typedef struct {
+typedef struct
+{
   char conteudo[MAX_MSG_SIZE];
 } mensagem;
 
@@ -86,26 +87,32 @@ void UARTIntHandler(void)
 
   ui32Status = ROM_UARTIntStatus(UART0_BASE, true);
   ROM_UARTIntClear(UART0_BASE, ui32Status);
-  
+
   // Se não há caracteres a serem lidos, retorne
-  if (!ROM_UARTCharsAvail(UART0_BASE)) return;
+  if (!ROM_UARTCharsAvail(UART0_BASE))
+    return;
 
   // Se houver caracteres, leia todos e os coloque na fila mqueueBroker
   mensagem *message;
-  message = (mensagem *) osMailAlloc(mqueueBroker, 0);
-    
+  message = (mensagem *)osMailAlloc(mqueueBroker, 0);
+
   int i = 0;
-  while(ROM_UARTCharsAvail(UART0_BASE))
+  while (ROM_UARTCharsAvail(UART0_BASE))
   {
-      char letra = ROM_UARTCharGetNonBlocking(UART0_BASE);
-      if (letra == '\n') {
-        break;
-      } else if(letra == '\r'){
-        message->conteudo[i] = '\0';
-      } else {
-        message->conteudo[i] = letra;
-        i++;
-      }
+    char letra = ROM_UARTCharGetNonBlocking(UART0_BASE);
+    if (letra == '\n')
+    {
+      break;
+    }
+    else if (letra == '\r')
+    {
+      message->conteudo[i] = '\0';
+    }
+    else
+    {
+      message->conteudo[i] = letra;
+      i++;
+    }
   }
 
   osMailPut(mqueueBroker, message);
@@ -115,7 +122,7 @@ void UARTIntHandler(void)
 void enviarComando(const char *pui8Buffer)
 {
   // Enquanto houver caracteres para enviar
-  while(*pui8Buffer != '\0')
+  while (*pui8Buffer != '\0')
   {
     // Envia o caractere
     ROM_UARTCharPutNonBlocking(UART0_BASE, *pui8Buffer++);
@@ -127,10 +134,11 @@ void enviarComando(const char *pui8Buffer)
 /*************************** THREAD IMPLEMENTATIONS ***************************/
 
 // Broker
-void broker() {
+void broker()
+{
   mensagem *received_message;
   osEvent event;
-  
+
   while (1)
   {
     // Espera por uma mensagem da fila mqueueBroker sem timeout
@@ -139,16 +147,17 @@ void broker() {
     {
       // Mensagem recebida
       received_message = (mensagem *)event.value.p;
-      
+
       // A mensagem é "initialized"?
-      if (strcmp(received_message->conteudo, "initialized") == 0) {
+      if (strcmp(received_message->conteudo, "initialized") == 0)
+      {
         // Repassa a mensagem para mqueueE, mqueueC e mqueueD
         mensagem *send_message_E, *send_message_C, *send_message_D;
-        
-        send_message_E = (mensagem *) osMailAlloc(mqueueE, osWaitForever);
-        send_message_C = (mensagem *) osMailAlloc(mqueueC, osWaitForever);
-        send_message_D = (mensagem *) osMailAlloc(mqueueD, osWaitForever);
-        
+
+        send_message_E = (mensagem *)osMailAlloc(mqueueE, osWaitForever);
+        send_message_C = (mensagem *)osMailAlloc(mqueueC, osWaitForever);
+        send_message_D = (mensagem *)osMailAlloc(mqueueD, osWaitForever);
+
         strcpy(send_message_E->conteudo, received_message->conteudo);
         strcpy(send_message_C->conteudo, received_message->conteudo);
         strcpy(send_message_D->conteudo, received_message->conteudo);
@@ -161,24 +170,25 @@ void broker() {
         osMailFree(mqueueBroker, received_message);
         continue;
       }
-      
+
       // O segundo caractere da mensagem é "I"?
-      if (received_message->conteudo[1] == 'I') {
+      if (received_message->conteudo[1] == 'I')
+      {
         // Repassa a mensagem para mqueueAsync e segue o fluxo
         mensagem *send_message;
-        send_message = (mensagem *) osMailAlloc(mqueueAsync, osWaitForever);
+        send_message = (mensagem *)osMailAlloc(mqueueAsync, osWaitForever);
         strcpy(send_message->conteudo, received_message->conteudo);
         osMailPut(mqueueAsync, send_message);
       }
-      
+
       // O primeiro caractere da mensagem é "e"?
       // TODO: repassa a mensagem para mqueueE e retorna
       // Não esquecer de dar osMailFree antes de retornar
-      
+
       // O primeiro caractere da mensagem é "c"?
       // TODO: repassa a mensagem para mqueueC e retorna
       // Não esquecer de dar osMailFree antes de retornar
-      
+
       // O primeiro caractere da mensagem é "d"?
       // TODO: repassa a mensagem para mqueueD e retorna
       // Não esquecer de dar osMailFree antes de retornar
@@ -189,7 +199,8 @@ void broker() {
 }
 
 // Async
-void async(){
+void async()
+{
   mensagem *received_message;
   osEvent event;
 
@@ -197,36 +208,45 @@ void async(){
   {
     // Espera por uma mensagem da fila mqueueAsync sem timeout
     event = osMailGet(mqueueAsync, osWaitForever);
-    
+
     if (event.status == osEventMail)
     {
       // Mensagem recebida
       received_message = (mensagem *)event.value.p;
-      
+
       // Substitui o segundo caractere da mensagem por "L"
       mensagem *send_message;
-      send_message = (mensagem *) osMailAlloc(mqueueTransmissor, osWaitForever);
+      send_message = (mensagem *)osMailAlloc(mqueueTransmissor, osWaitForever);
       strcpy(send_message->conteudo, received_message->conteudo);
       send_message->conteudo[1] = 'L';
-      
+
       // Repassa a mensagem para mqueueTransmissor
       osMailPut(mqueueTransmissor, send_message);
-      
+
       osMailFree(mqueueAsync, received_message);
     }
   }
 }
 
 // Elevador
-void elevador(void const *arg) {
+void elevador(void const *arg)
+{
   // TODO: remover este exemplo e implementar a thread
-  char elevador = (char) arg;
+  char elevador = (char)arg;
   osMailQId mqueueElevador;
-  switch (elevador) {
-    case 'e': mqueueElevador = mqueueE; break;
-    case 'c': mqueueElevador = mqueueC; break;
-    case 'd': mqueueElevador = mqueueD; break;
-    default: break;
+  switch (elevador)
+  {
+  case 'e':
+    mqueueElevador = mqueueE;
+    break;
+  case 'c':
+    mqueueElevador = mqueueC;
+    break;
+  case 'd':
+    mqueueElevador = mqueueD;
+    break;
+  default:
+    break;
   }
 
   mensagem *received_message;
@@ -236,18 +256,18 @@ void elevador(void const *arg) {
   {
     // Espera por uma mensagem da fila mqueueElevador sem timeout
     event = osMailGet(mqueueElevador, osWaitForever);
-    
+
     if (event.status == osEventMail)
     {
       // Mensagem recebida
       received_message = (mensagem *)event.value.p;
-      
+
       // Envia um <elevador>r para fins de teste
       mensagem *send_message;
-      send_message = (mensagem *) osMailAlloc(mqueueTransmissor, osWaitForever);
+      send_message = (mensagem *)osMailAlloc(mqueueTransmissor, osWaitForever);
       send_message->conteudo[0] = elevador;
       send_message->conteudo[1] = 'r';
-      
+
       // Repassa a mensagem para mqueueTransmissor
       osMailPut(mqueueTransmissor, send_message);
 
@@ -257,7 +277,8 @@ void elevador(void const *arg) {
 }
 
 // Transmissor
-void transmissor() {
+void transmissor()
+{
   mensagem *received_message;
   osEvent event;
 
@@ -269,7 +290,7 @@ void transmissor() {
     {
       // Mensagem recebida
       received_message = (mensagem *)event.value.p;
-      
+
       // Envia a mensagem pela UART
       enviarComando(received_message->conteudo);
 
@@ -281,12 +302,14 @@ void transmissor() {
 /***************************** INITIALIZE SYSTEM ******************************/
 
 // Main
-void main(void){
+void main(void)
+{
   // Configurações de interrupções, periféricos, UART, etc.
   g_ui32SysClock = MAP_SysCtlClockFreqSet((SYSCTL_XTAL_25MHZ |
-                                             SYSCTL_OSC_MAIN |
-                                             SYSCTL_USE_PLL |
-                                             SYSCTL_CFG_VCO_480), 120000000);
+                                           SYSCTL_OSC_MAIN |
+                                           SYSCTL_USE_PLL |
+                                           SYSCTL_CFG_VCO_480),
+                                          120000000);
 
   ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
   ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
@@ -306,16 +329,16 @@ void main(void){
 
   // Configurações dos recursos do CMSIS
   osKernelInitialize();
-  
+
   // Threads
   // TODO: a última task (elevador D) não está sendo instanciada
   thread_broker_id = osThreadCreate(osThread(broker), NULL);
   thread_async_id = osThreadCreate(osThread(async), NULL);
   thread_transmissor_id = osThreadCreate(osThread(transmissor), NULL);
-  thread_e_id = osThreadCreate(osThread(elevador), (void *) 'e');
-  thread_c_id = osThreadCreate(osThread(elevador), (void *) 'c');
-  thread_d_id = osThreadCreate(osThread(elevador), (void *) 'd');
-  
+  thread_e_id = osThreadCreate(osThread(elevador), (void *)'e');
+  thread_c_id = osThreadCreate(osThread(elevador), (void *)'c');
+  thread_d_id = osThreadCreate(osThread(elevador), (void *)'d');
+
   // Mail queues
   mqueueBroker = osMailCreate(osMailQ(mqueueBroker), NULL);
   mqueueAsync = osMailCreate(osMailQ(mqueueAsync), NULL);
@@ -325,6 +348,6 @@ void main(void){
   mqueueTransmissor = osMailCreate(osMailQ(mqueueTransmissor), NULL);
 
   osKernelStart();
-  
+
   osDelay(osWaitForever);
 }
