@@ -16,7 +16,7 @@
         <ShowSource>1</ShowSource>
     </Trace1>
     <DebugChecksum>
-        <Checksum>3419044246</Checksum>
+        <Checksum>2804525197</Checksum>
     </DebugChecksum>
     <CodeCoverage>
         <Enabled>_ 0</Enabled>
@@ -103,18 +103,22 @@
         <Bp2>_ "STD_CODE" "{$PROJ_DIR$\src}.79.3" 0 0 0 0 "" 0 ""</Bp2>
         <Bp3>_ "STD_CODE" "{$PROJ_DIR$\src\startup_tm4c1294ncpdt.c}.327.5" 1 0 0 0 "" 0 ""</Bp3>
         <Bp4>_ "STD_CODE" "{$PROJ_DIR$\src\RTX_Conf_CM.c}.283.3" 0 0 0 0 "" 0 ""</Bp4>
-        <Bp5>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.0.1" 1 0 0 0 "" 0 ""</Bp5>
-        <Bp6>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.0.1" 1 0 0 0 "" 0 ""</Bp6>
-        <Bp7>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.0.1" 1 0 0 0 "" 0 ""</Bp7>
-        <Bp8>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.0.1" 1 0 0 0 "" 0 ""</Bp8>
-        <Bp9>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.0.1" 1 0 0 0 "" 0 ""</Bp9>
-        <Count>10</Count>
+        <Bp5>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.0.1" 0 0 0 0 "" 0 ""</Bp5>
+        <Bp6>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.0.1" 0 0 0 0 "" 0 ""</Bp6>
+        <Bp7>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.0.1" 0 0 0 0 "" 0 ""</Bp7>
+        <Bp8>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.0.1" 0 0 0 0 "" 0 ""</Bp8>
+        <Bp9>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.0.1" 0 0 0 0 "" 0 ""</Bp9>
+        <Bp10>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.383.7" 1 0 0 0 "" 0 ""</Bp10>
+        <Bp11>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.424.9" 1 0 0 0 "" 0 ""</Bp11>
+        <Bp12>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.416.7" 1 0 0 0 "" 0 ""</Bp12>
+        <Count>13</Count>
     </Breakpoints>
     <Aliases>
         <A0>_ "C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\RTOS\RTX\SRC\rt_CMSIS.c" ""</A0>
-        <A1>_ "C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\driverlib\gpio.c" "C:\Users\Renato\Downloads\emb\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\driverlib\gpio.c"</A1>
-        <A2>_ "C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo1\src\main.c" "C:\Users\Renato\Downloads\emb\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo1\src\main.c"</A2>
-        <Count>3</Count>
+        <A1>_ "C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\RTOS\RTX\SRC\rt_Semaphore.c" ""</A1>
+        <A2>_ "C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\driverlib\gpio.c" "C:\Users\Renato\Downloads\emb\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\driverlib\gpio.c"</A2>
+        <A3>_ "C:\Users\junio\Documents\Facul\Sistemas Embarcados\git\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo1\src\main.c" "C:\Users\Renato\Downloads\emb\sistemas-embarcados\lab_3\Tiva_RTOS_IAR8\exemplo1\src\main.c"</A3>
+        <Count>4</Count>
         <SuppressDialog>1</SuppressDialog>
     </Aliases>
 </settings>

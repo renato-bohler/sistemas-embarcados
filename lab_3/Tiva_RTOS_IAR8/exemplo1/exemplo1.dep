@@ -64,10 +64,6 @@
             <file>$PROJ_DIR$\ewarm\Obj\RTX_Conf_CM.pbi</file>
             <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
             <file>$TOOLKIT_DIR$\inc\c\string.h</file>
-            <file>$PROJ_DIR$\..\RTOS\RTX\SRC\rt_CMSIS.c</file>
-            <file>$PROJ_DIR$\..\RTOS\RTX\SRC\rt_System.c</file>
-            <file>$TOOLKIT_DIR$\config\debugger\ARM\vector_catch.mac</file>
-            <file>$PROJ_DIR$\..\RTOS\RTX\SRC\rt_Event.c</file>
         </outputs>
         <file>
             <name>[ROOT_NODE]</name>
@@ -128,7 +124,7 @@
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 52 24 17 29 37 9 14 1 26 41 21 12 13 39 40 58 27 23 35 42 8 54 19 57 15</file>
+                    <file> 17 12 29 14 37 9 1 26 41 21 13 52 39 40 58 27 23 35 42 8 24 15 54 19 57</file>
                 </tool>
             </inputs>
         </file>

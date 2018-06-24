@@ -78,11 +78,12 @@ osMailQId mqueueD;
 
 /******************************* UART FUNCTIONS *******************************/
 
-// Handler da interrupção UART
+/* 
+ * UARTIntHandler - Handler da interrupção UART
+ * Recebe as informações da UART e envia mensagens para mqueueBroker
+ */
 void UARTIntHandler(void)
 {
-  /* TODO: a mensagem "initialized" vem dividida em duas partes quando não é
-   * colocado o debugger: "initiali" e "zed\r\n" */
   uint32_t ui32Status;
 
   ui32Status = ROM_UARTIntStatus(UART0_BASE, true);
@@ -118,7 +119,10 @@ void UARTIntHandler(void)
   osMailPut(mqueueBroker, message);
 }
 
-// Enviador de comandos para o simulador via serial
+/* 
+ * enviarComando
+ * Envia um dado comando para o simulador
+ */
 void enviarComando(const char *pui8Buffer)
 {
   // Enquanto houver caracteres para enviar
@@ -131,9 +135,38 @@ void enviarComando(const char *pui8Buffer)
   ROM_UARTCharPutNonBlocking(UART0_BASE, '\r');
 }
 
+/*********************************** UTILS ************************************/
+
+/* 
+ * andarLetraParaNumero
+ * Recebe um char (a...p) e mapeia para o andar correspondente (0...15)
+ * Uso: botão interno <elevador>I<a...p>
+ */
+int andarLetraParaNumero(char andar) {
+  // 97 é o valor decimal do caractere 'a' em ASCII
+  return (int) andar - 97;
+}
+
+/* 
+ * andarStringParaNumero
+ * Recebe uma string (00...15) e mapeia para o inteiro correspondente (0...15)
+ * Usos: botão externo <elevador>E<00...15><s|d>
+ *       chegada a andar <elevador><0...15>
+ */
+int andarStringParaNumero(char dezena, char unidade) {
+  // 48 é o valor decimal do caractere '0' em ASCII
+  int dez = (int) dezena - 48;
+  int uni = (int) unidade - 48;
+  
+  return dez * 10 + uni;
+}
+
 /*************************** THREAD IMPLEMENTATIONS ***************************/
 
-// Broker
+/* 
+ * broker
+ * Responsável pelo endereçamento correto das mensagens para as demais filas
+ */
 void broker()
 {
   mensagem *received_message;
@@ -149,7 +182,7 @@ void broker()
       received_message = (mensagem *)event.value.p;
 
       // A mensagem é "initialized"?
-      if (strcmp(received_message->conteudo, "initialized") == 0)
+      if (received_message->conteudo[0] == 'i')
       {
         // Repassa a mensagem para mqueueE, mqueueC e mqueueD
         mensagem *send_message_E, *send_message_C, *send_message_D;
@@ -158,15 +191,15 @@ void broker()
         send_message_C = (mensagem *)osMailAlloc(mqueueC, osWaitForever);
         send_message_D = (mensagem *)osMailAlloc(mqueueD, osWaitForever);
 
-        strcpy(send_message_E->conteudo, received_message->conteudo);
-        strcpy(send_message_C->conteudo, received_message->conteudo);
-        strcpy(send_message_D->conteudo, received_message->conteudo);
+        strcpy(send_message_E->conteudo, "initialized");
+        strcpy(send_message_C->conteudo, "initialized");
+        strcpy(send_message_D->conteudo, "initialized");
 
         osMailPut(mqueueE, send_message_E);
         osMailPut(mqueueC, send_message_C);
         osMailPut(mqueueD, send_message_D);
 
-        // Continua o fluxo
+        // Espera próxima mensagem
         osMailFree(mqueueBroker, received_message);
         continue;
       }
@@ -174,31 +207,67 @@ void broker()
       // O segundo caractere da mensagem é "I"?
       if (received_message->conteudo[1] == 'I')
       {
-        // Repassa a mensagem para mqueueAsync e segue o fluxo
+        // Repassa a mensagem para mqueueAsync
         mensagem *send_message;
         send_message = (mensagem *)osMailAlloc(mqueueAsync, osWaitForever);
         strcpy(send_message->conteudo, received_message->conteudo);
         osMailPut(mqueueAsync, send_message);
+        
+        // Continua a tratar esta mensagem
       }
 
       // O primeiro caractere da mensagem é "e"?
-      // TODO: repassa a mensagem para mqueueE e retorna
-      // Não esquecer de dar osMailFree antes de retornar
+      if (received_message->conteudo[0] == 'e')
+      {
+        // Repassa a mensagem para mqueueE
+        mensagem *send_message;
+        send_message = (mensagem *)osMailAlloc(mqueueE, osWaitForever);
+        strcpy(send_message->conteudo, received_message->conteudo);
+        osMailPut(mqueueE, send_message);
+        
+        // Espera próxima mensagem
+        osMailFree(mqueueBroker, received_message);
+        continue;
+      }
 
       // O primeiro caractere da mensagem é "c"?
-      // TODO: repassa a mensagem para mqueueC e retorna
-      // Não esquecer de dar osMailFree antes de retornar
+      if (received_message->conteudo[0] == 'c')
+      {
+        // Repassa a mensagem para mqueueC
+        mensagem *send_message;
+        send_message = (mensagem *)osMailAlloc(mqueueC, osWaitForever);
+        strcpy(send_message->conteudo, received_message->conteudo);
+        osMailPut(mqueueC, send_message);
+
+        // Espera próxima mensagem
+        osMailFree(mqueueBroker, received_message);
+        continue;
+      }
 
       // O primeiro caractere da mensagem é "d"?
-      // TODO: repassa a mensagem para mqueueD e retorna
-      // Não esquecer de dar osMailFree antes de retornar
+      if (received_message->conteudo[0] == 'd')
+      {
+        // Repassa a mensagem para mqueueD
+        mensagem *send_message;
+        send_message = (mensagem *)osMailAlloc(mqueueD, osWaitForever);
+        strcpy(send_message->conteudo, received_message->conteudo);
+        osMailPut(mqueueD, send_message);
+        
+        // Espera próxima mensagem
+        osMailFree(mqueueBroker, received_message);
+        continue;
+      }
 
+      // Mensagem desconhecida
       osMailFree(mqueueBroker, received_message);
     }
   }
 }
 
-// Async
+/* 
+ * async
+ * Responsável por realizar o acionamento dos indicadores dos botões internos
+ */
 void async()
 {
   mensagem *received_message;
@@ -228,10 +297,13 @@ void async()
   }
 }
 
-// Elevador
+/* 
+ * elevador
+ * Responsável por realizar o controle dos elevadores
+ */
 void elevador(void const *arg)
 {
-  // TODO: remover este exemplo e implementar a thread
+  // TODO: implementar corretamente
   char elevador = (char)arg;
   osMailQId mqueueElevador;
   switch (elevador)
@@ -262,21 +334,107 @@ void elevador(void const *arg)
       // Mensagem recebida
       received_message = (mensagem *)event.value.p;
 
-      // Envia um <elevador>r para fins de teste
-      mensagem *send_message;
-      send_message = (mensagem *)osMailAlloc(mqueueTransmissor, osWaitForever);
-      send_message->conteudo[0] = elevador;
-      send_message->conteudo[1] = 'r';
+      // Mensagem: initialized
+      if (received_message->conteudo[0] == 'i') {
+        // Reseta o elevador
+        mensagem *send_message;
+        send_message = (mensagem *)osMailAlloc(mqueueTransmissor, osWaitForever);
+        send_message->conteudo[0] = elevador;
+        send_message->conteudo[1] = 'r';
+        
+        // Repassa a mensagem para mqueueTransmissor
+        osMailPut(mqueueTransmissor, send_message);
+        osMailFree(mqueueElevador, received_message);
+        continue;
+      }
+      
+      // Mensagem: <elevador>I<andar (a...p)>
+      if (received_message->conteudo[1] == 'I') {
+        // Só para fins de teste:
+        // Apertou algum botão interno, manda o elevador fechar as portas
+        mensagem *send_message;
+        send_message = (mensagem *)osMailAlloc(mqueueTransmissor, osWaitForever);
+        send_message->conteudo[0] = elevador;
+        send_message->conteudo[1] = 'f';
+        
+        // Conversão do andar em integer
+        int andar = andarLetraParaNumero(received_message->conteudo[2]);
+        
+        osMailPut(mqueueTransmissor, send_message);
+        osMailFree(mqueueElevador, received_message);
+        continue;
+      }
+      
+      // Mensagem: <elevador>F
+      if (received_message->conteudo[1] == 'F') {
+        // Só para fins de teste:
+        // Porta foi fechada, manda o elevador subir
+        mensagem *send_message;
+        send_message = (mensagem *)osMailAlloc(mqueueTransmissor, osWaitForever);
+        send_message->conteudo[0] = elevador;
+        send_message->conteudo[1] = 's';
+        
+        osMailPut(mqueueTransmissor, send_message);
+        osMailFree(mqueueElevador, received_message);
+        continue;
+      }
+      
+      // Mensagem: <elevador><andar (0...15)>
+      if (received_message->conteudo[1] >= '0' && received_message->conteudo[1] <= '9') {
+        // Só para fins de teste:
+        // Chegou em algum andar, pare e abra a porta.
+        
+        mensagem *send_message_pare;
+        send_message_pare = (mensagem *)osMailAlloc(mqueueTransmissor, osWaitForever);
+        send_message_pare->conteudo[0] = elevador;
+        send_message_pare->conteudo[1] = 'p';
+        osMailPut(mqueueTransmissor, send_message_pare);
+        
+        mensagem *send_message_abre;
+        send_message_abre = (mensagem *)osMailAlloc(mqueueTransmissor, osWaitForever);
+        send_message_abre->conteudo[0] = elevador;
+        send_message_abre->conteudo[1] = 'a';
+        osMailPut(mqueueTransmissor, send_message_abre);
+        
+        // Conversão do andar em integer
+        char dezena, unidade;
+        if (strlen(received_message->conteudo) == 3) {
+          dezena = received_message->conteudo[1];
+          unidade = received_message->conteudo[2];
+        } else {
+          dezena = '0';
+          unidade = received_message->conteudo[1];
+        }
+        int andar = andarStringParaNumero(dezena, unidade);
+        
+        osMailFree(mqueueElevador, received_message);
+        osDelay(2000);
+        continue;
+      }
+      
+      // Mensagem: <elevador>E<andar (00...15)><s|d>
+      if (received_message->conteudo[1] == 'E') {
+        // Conversão do andar em integer
+        char dezena, unidade;
+        dezena = received_message->conteudo[2];
+        unidade = received_message->conteudo[3];
+        
+        int andar = andarStringParaNumero(dezena, unidade);
+        
+        osMailFree(mqueueElevador, received_message);
+        continue;
+      }
 
-      // Repassa a mensagem para mqueueTransmissor
-      osMailPut(mqueueTransmissor, send_message);
-
+      // Mensagem não utilizada
       osMailFree(mqueueElevador, received_message);
     }
   }
 }
 
-// Transmissor
+/* 
+ * transmissor
+ * Responsável por realizar o envio de todos os comandos para o simulador
+ */
 void transmissor()
 {
   mensagem *received_message;
@@ -301,7 +459,10 @@ void transmissor()
 
 /***************************** INITIALIZE SYSTEM ******************************/
 
-// Main
+/* 
+ * main
+ * Responsável por configurar periféricos e o sistema operacional
+ */
 void main(void)
 {
   // Configurações de interrupções, periféricos, UART, etc.
@@ -331,7 +492,6 @@ void main(void)
   osKernelInitialize();
 
   // Threads
-  // TODO: a última task (elevador D) não está sendo instanciada
   thread_broker_id = osThreadCreate(osThread(broker), NULL);
   thread_async_id = osThreadCreate(osThread(async), NULL);
   thread_transmissor_id = osThreadCreate(osThread(transmissor), NULL);
