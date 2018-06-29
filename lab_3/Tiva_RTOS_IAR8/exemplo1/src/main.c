@@ -18,6 +18,23 @@
 
 #define QUEUE_LIMIT 64
 #define MAX_MSG_SIZE 16
+#define FECHADA 0
+#define ABERTA 1
+
+enum estado {
+  esperando_inicializacao = 1,
+  standby,
+  fechando_porta,
+  abrindo_porta,
+  subindo,
+  descendo
+};
+
+enum sentido {
+  parado = 1,
+  subindo,
+  descendo
+};
 
 // System clock
 uint32_t g_ui32SysClock;
@@ -161,6 +178,10 @@ int andarStringParaNumero(char dezena, char unidade) {
   return dez * 10 + uni;
 }
 
+int deveSubir(sentido s, int andar, int *destinos_internos, int *destinos_sobe, int *destinos_desce) {
+  // Se o sentido for de subida e houver destinos acima do andar, continua subindo
+  return 1;
+}
 /*************************** THREAD IMPLEMENTATIONS ***************************/
 
 /* 
@@ -323,10 +344,27 @@ void elevador(void const *arg)
 
   mensagem *received_message;
   osEvent event;
+  
+  // Variáveis de estado
+  int andar = 0;
+  int porta = FECHADA;
+  int destinos_internos[16];
+  int destinos_sobe[16];
+  int destinos_desce[16];
+  int chegou_em_andar = 0;
+  estado estado_elevador = esperando_init;
 
+  int i;
+  for(i=0; i < 16; i++)
+  {
+    dest_interno[i] = 0;
+    dest_sobe[i] = 0;
+    dest_desce[i] = 0;
+  }
+  
   while (1)
   {
-    // Espera por uma mensagem da fila mqueueElevador sem timeout
+    // 1. Espera por uma mensagem vinda da fila correspondente
     event = osMailGet(mqueueElevador, osWaitForever);
 
     if (event.status == osEventMail)
@@ -334,8 +372,10 @@ void elevador(void const *arg)
       // Mensagem recebida
       received_message = (mensagem *)event.value.p;
 
-      // Mensagem: initialized
-      if (received_message->conteudo[0] == 'i') {
+      // 2. Atualização das variáveis de estado do elevador
+      
+      // Esperando inicialização
+      if (estado == esperando_inicializacao && received_message->conteudo[0] == 'i') {
         // Reseta o elevador
         mensagem *send_message;
         send_message = (mensagem *)osMailAlloc(mqueueTransmissor, osWaitForever);
@@ -345,29 +385,51 @@ void elevador(void const *arg)
         // Repassa a mensagem para mqueueTransmissor
         osMailPut(mqueueTransmissor, send_message);
         osMailFree(mqueueElevador, received_message);
+        
+        // Transição para standby
+        estado = standby;
+
         continue;
       }
       
-      // Mensagem: <elevador>I<andar (a...p)>
-      if (received_message->conteudo[1] == 'I') {
-        // Só para fins de teste:
-        // Apertou algum botão interno, manda o elevador fechar as portas
-        mensagem *send_message;
-        send_message = (mensagem *)osMailAlloc(mqueueTransmissor, osWaitForever);
-        send_message->conteudo[0] = elevador;
-        send_message->conteudo[1] = 'f';
+      // Standby
+      if (estado == standby) {
+        if (received_message->conteudo[1] == 'I') {
+          // Apertou algum botão interno | <elevador>I<a...p>
+          int destino_andar = andarLetraParaNumero(received_message->conteudo[2]);
+          destinos_internos[destino_andar] = 1;
+        } else if (received_message->conteudo[1] == 'E') {
+          // Apertou algum botão externo | <elevador>E<00...15><s|d>
+          char dezena = received_message->conteudo[2];
+          char unidade = received_message->conteudo[3];
+          int destino_andar = andarStringParaNumero(dezena, unidade);
+          
+          if (received_message->conteudo[4] == 's') {
+            // Botão externo de subida foi apertado
+            destinos_sobe[destino_andar] = 1;
+          } else if (received_message->conteudo[4] == 'd') {
+            // Botão externo de descida foi apertado
+            destinos_desce[destino_andar] = 1;
+          }
+        }
         
-        // Conversão do andar em integer
-        int andar = andarLetraParaNumero(received_message->conteudo[2]);
-        
-        osMailPut(mqueueTransmissor, send_message);
-        osMailFree(mqueueElevador, received_message);
-        continue;
+        if (received_message->conteudo[1] == 'I' || received_message->conteudo[1] == 'E') {
+          mensagem *send_message;
+          send_message = (mensagem *)osMailAlloc(mqueueTransmissor, osWaitForever);
+          send_message->conteudo[0] = elevador;
+          send_message->conteudo[1] = 'f';
+          
+          osMailPut(mqueueTransmissor, send_message);
+          osMailFree(mqueueElevador, received_message);
+          estado = fechando_porta;
+          continue;
+        }
       }
       
       // Mensagem: <elevador>F
-      if (received_message->conteudo[1] == 'F') {
-        // Só para fins de teste:
+      // Fechando porta
+      if (estado == fechando_porta && received_message->conteudo[1] == 'F') {
+        
         // Porta foi fechada, manda o elevador subir
         mensagem *send_message;
         send_message = (mensagem *)osMailAlloc(mqueueTransmissor, osWaitForever);
