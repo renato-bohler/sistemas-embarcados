@@ -18,23 +18,28 @@
 
 #define QUEUE_LIMIT 64
 #define MAX_MSG_SIZE 16
-#define FECHADA 0
-#define ABERTA 1
+#define NUM_ANDARES 16
+#define TEMPO_PORTA_ABERTA 2000
 
-enum estado {
+typedef enum porta {
+  fechada = 1,
+  aberta
+} porta;
+
+typedef enum estado {
   esperando_inicializacao = 1,
   standby,
   fechando_porta,
   abrindo_porta,
   subindo,
   descendo
-};
+} estado;
 
-enum sentido {
-  parado = 1,
-  subindo,
-  descendo
-};
+typedef enum sentido {
+  elevador_parado = 1,
+  elevador_subindo,
+  elevador_descendo
+} sentido;
 
 // System clock
 uint32_t g_ui32SysClock;
@@ -50,17 +55,17 @@ typedef struct
 // Broker
 osThreadId thread_broker_id;
 void broker();
-osThreadDef(broker, osPriorityAboveNormal, 1, 0);
+osThreadDef(broker, osPriorityHigh, 1, 0);
 
 // Async
 osThreadId thread_async_id;
 void async();
-osThreadDef(async, osPriorityNormal, 1, 0);
+osThreadDef(async, osPriorityAboveNormal, 1, 0);
 
 // Transmissor
 osThreadId thread_transmissor_id;
 void transmissor();
-osThreadDef(transmissor, osPriorityAboveNormal, 1, 0);
+osThreadDef(transmissor, osPriorityHigh, 1, 0);
 
 // Elevadores (E, C, D)
 osThreadId thread_e_id, thread_c_id, thread_d_id;
@@ -112,7 +117,7 @@ void UARTIntHandler(void)
 
   // Se houver caracteres, leia todos e os coloque na fila mqueueBroker
   mensagem *message;
-  message = (mensagem *)osMailAlloc(mqueueBroker, 0);
+  message = (mensagem *)osMailCAlloc(mqueueBroker, 0);
 
   int i = 0;
   while (ROM_UARTCharsAvail(UART0_BASE))
@@ -165,6 +170,16 @@ int andarLetraParaNumero(char andar) {
 }
 
 /* 
+ * andarNumeroParaLetra
+ * Recebe um inteiro (0...15) e mapeia para a letra do andar correspondente (a...p)
+ * Uso: desligar botão interno <elevador>D<a...p>
+ */
+char andarNumeroParaLetra(int andar) {
+  // 97 é o valor decimal do caractere 'a' em ASCII
+  return (char) andar + 97;
+}
+
+/* 
  * andarStringParaNumero
  * Recebe uma string (00...15) e mapeia para o inteiro correspondente (0...15)
  * Usos: botão externo <elevador>E<00...15><s|d>
@@ -178,10 +193,123 @@ int andarStringParaNumero(char dezena, char unidade) {
   return dez * 10 + uni;
 }
 
-int deveSubir(sentido s, int andar, int *destinos_internos, int *destinos_sobe, int *destinos_desce) {
-  // Se o sentido for de subida e houver destinos acima do andar, continua subindo
-  return 1;
+/*
+ * ehDestino
+ * Recebe o andar e os destinos de um elevador e retorna se ele é um destino
+ */
+int ehDestino(sentido s, int andar, int *destinos_internos, int *destinos_sobe, int *destinos_desce) {
+  if (s == elevador_parado) {
+    // Se o elevador estiver parado, então qualquer sentido será considerado destino
+    if (destinos_internos[andar] || destinos_sobe[andar] || destinos_desce[andar]) {
+      return 1;
+    }
+  } else if (s == elevador_subindo) {
+    // Se o elevador estiver subindo, então:
+    //  - os pedidos de subida serão considerados destino
+    //  - os pedidos internos serão considerados destino
+    //  - Se não houver mais ninguém querendo subir, então:
+    //    - o pedido de descida do andar mais alto será considerado destino
+    if (destinos_sobe[andar] || destinos_internos[andar]) {
+      return 1;
+    } else if (destinos_desce[andar]) {
+      // Verifica se existe algum andar acima deste que também quer descer
+      int i, andar_desce_mais_alto = andar, mais_alguem_quer_subir = 0;
+      for (i = andar + 1; i < NUM_ANDARES; i++) {
+        if (destinos_desce[i]) {
+          andar_desce_mais_alto = i;
+        } else if (destinos_sobe[i]) {
+          mais_alguem_quer_subir = 1;
+        }
+      }
+      if (!mais_alguem_quer_subir && andar == andar_desce_mais_alto) {
+        return 1;
+      }
+    }
+  } else if (s == elevador_descendo) {
+    // Se o elevador estiver descendo, então:
+    //  - os pedidos de descida serão considerados destino
+    //  - os pedidos internos serão considerados destino
+    //  - o pedido de subida do andar mais baixo será considerado destino
+    if (destinos_desce[andar] || destinos_internos[andar]) {
+      return 1;
+    } else if (destinos_sobe[andar]) {
+      // Verifica se existe algum andar abaixo deste que também quer subir
+      int i, andar_sobe_mais_baixo = andar;
+      for (i = andar - 1; i >= 0; i--) {
+        if (destinos_sobe[i]) {
+          andar_sobe_mais_baixo = i;
+        }
+      }
+      if (andar == andar_sobe_mais_baixo) {
+        return 1;
+      }
+    }
+  }
+  
+  // Se nenhum destes critérios foi aceito, então o dado andar não é destino
+  return 0;
 }
+
+/* 
+ * possuiDestino
+ * Recebe o sentido e os destinos de um elevador e retorna se ele possui destino
+ */
+int possuiDestino(sentido s, int *destinos_internos, int *destinos_sobe, int *destinos_desce) {
+  // Para cada andar
+  int i;
+  for (i = 0; i < NUM_ANDARES; i++) {
+    // Se este andar for destino, então o elevador possui destino
+    if (ehDestino(s, i, destinos_internos, destinos_sobe, destinos_desce)) {
+      return 1;
+    }
+  }
+
+  // Se nenhum andar possui destino, então o elevador não possui destino
+  return 0;
+}
+
+/* 
+ * deveSubir
+ * Recebe o sentido, o andar e os destinos de um elevador e retorna se ele deve subir
+ */
+int deveSubir(sentido s, int andar, int *destinos_internos, int *destinos_sobe, int *destinos_desce) {
+  // Se o elevador estiver parado ou já estiver subindo
+  if (s == elevador_subindo || s == elevador_parado) {
+    // Para cada andar acima do andar atual
+    int i;
+    for (i = andar + 1; i < NUM_ANDARES; i++) {
+      // Se este andar for destino, então deve subir
+      if (ehDestino(s, i, destinos_internos, destinos_sobe, destinos_desce)) {
+        return 1;
+      }
+    }
+  }
+
+  // Se nenhum andar acima está com o destino definido, então não deve subir
+  return 0;
+}
+
+/* 
+ * deveDescer
+ * Recebe o sentido, o andar e os destinos de um elevador e retorna se ele deve descer
+ */
+int deveDescer(sentido s, int andar, int *destinos_internos, int *destinos_sobe, int *destinos_desce) {
+  // Se o elevador estiver parado ou já estiver descendo
+  if (s == elevador_descendo || s == elevador_parado) {
+    // Para cada andar abaixo do andar atual
+    int i;
+    for (i = andar - 1; i >= 0; i--) {
+      // Se este andar for destino, então deve descer
+      if (ehDestino(s, i, destinos_internos, destinos_sobe, destinos_desce)) {
+        return 1;
+      }
+    }
+  }
+
+  // Se nenhum andar abaixo está com o destino definido, então não deve descer
+  return 0;
+}
+
 /*************************** THREAD IMPLEMENTATIONS ***************************/
 
 /* 
@@ -208,9 +336,9 @@ void broker()
         // Repassa a mensagem para mqueueE, mqueueC e mqueueD
         mensagem *send_message_E, *send_message_C, *send_message_D;
 
-        send_message_E = (mensagem *)osMailAlloc(mqueueE, osWaitForever);
-        send_message_C = (mensagem *)osMailAlloc(mqueueC, osWaitForever);
-        send_message_D = (mensagem *)osMailAlloc(mqueueD, osWaitForever);
+        send_message_E = (mensagem *)osMailCAlloc(mqueueE, osWaitForever);
+        send_message_C = (mensagem *)osMailCAlloc(mqueueC, osWaitForever);
+        send_message_D = (mensagem *)osMailCAlloc(mqueueD, osWaitForever);
 
         strcpy(send_message_E->conteudo, "initialized");
         strcpy(send_message_C->conteudo, "initialized");
@@ -230,7 +358,7 @@ void broker()
       {
         // Repassa a mensagem para mqueueAsync
         mensagem *send_message;
-        send_message = (mensagem *)osMailAlloc(mqueueAsync, osWaitForever);
+        send_message = (mensagem *)osMailCAlloc(mqueueAsync, osWaitForever);
         strcpy(send_message->conteudo, received_message->conteudo);
         osMailPut(mqueueAsync, send_message);
         
@@ -242,7 +370,7 @@ void broker()
       {
         // Repassa a mensagem para mqueueE
         mensagem *send_message;
-        send_message = (mensagem *)osMailAlloc(mqueueE, osWaitForever);
+        send_message = (mensagem *)osMailCAlloc(mqueueE, osWaitForever);
         strcpy(send_message->conteudo, received_message->conteudo);
         osMailPut(mqueueE, send_message);
         
@@ -256,7 +384,7 @@ void broker()
       {
         // Repassa a mensagem para mqueueC
         mensagem *send_message;
-        send_message = (mensagem *)osMailAlloc(mqueueC, osWaitForever);
+        send_message = (mensagem *)osMailCAlloc(mqueueC, osWaitForever);
         strcpy(send_message->conteudo, received_message->conteudo);
         osMailPut(mqueueC, send_message);
 
@@ -270,7 +398,7 @@ void broker()
       {
         // Repassa a mensagem para mqueueD
         mensagem *send_message;
-        send_message = (mensagem *)osMailAlloc(mqueueD, osWaitForever);
+        send_message = (mensagem *)osMailCAlloc(mqueueD, osWaitForever);
         strcpy(send_message->conteudo, received_message->conteudo);
         osMailPut(mqueueD, send_message);
         
@@ -306,7 +434,7 @@ void async()
 
       // Substitui o segundo caractere da mensagem por "L"
       mensagem *send_message;
-      send_message = (mensagem *)osMailAlloc(mqueueTransmissor, osWaitForever);
+      send_message = (mensagem *)osMailCAlloc(mqueueTransmissor, osWaitForever);
       strcpy(send_message->conteudo, received_message->conteudo);
       send_message->conteudo[1] = 'L';
 
@@ -324,7 +452,6 @@ void async()
  */
 void elevador(void const *arg)
 {
-  // TODO: implementar corretamente
   char elevador = (char)arg;
   osMailQId mqueueElevador;
   switch (elevador)
@@ -346,145 +473,349 @@ void elevador(void const *arg)
   osEvent event;
   
   // Variáveis de estado
+  estado estado_elevador = esperando_inicializacao;
   int andar = 0;
-  int porta = FECHADA;
-  int destinos_internos[16];
-  int destinos_sobe[16];
-  int destinos_desce[16];
-  int chegou_em_andar = 0;
-  estado estado_elevador = esperando_init;
+  porta estado_porta = fechada;
+  sentido sentido_elevador = elevador_parado;
+  int destinos_internos[NUM_ANDARES];
+  int destinos_sobe[NUM_ANDARES];
+  int destinos_desce[NUM_ANDARES];
 
+  // Indicadores do conteúdo da última mensagem
+  int chegou_em_andar = 0;
+  int initialized = 0;
+  
   int i;
-  for(i=0; i < 16; i++)
+  for(i=0; i < NUM_ANDARES; i++)
   {
-    dest_interno[i] = 0;
-    dest_sobe[i] = 0;
-    dest_desce[i] = 0;
+    destinos_internos[i] = 0;
+    destinos_sobe[i] = 0;
+    destinos_desce[i] = 0;
   }
   
   while (1)
   {
-    // 1. Espera por uma mensagem vinda da fila correspondente
+      /***********************************************************/
+     /* 1. Espera por uma mensagem vinda da fila correspondente */
+    /***********************************************************/
+    
     event = osMailGet(mqueueElevador, osWaitForever);
 
     if (event.status == osEventMail)
     {
       // Mensagem recebida
       received_message = (mensagem *)event.value.p;
+      char *msg_conteudo = received_message->conteudo;
 
-      // 2. Atualização das variáveis de estado do elevador
+        /******************************************************/
+       /* 2. Atualização das variáveis de estado do elevador */
+      /******************************************************/
       
-      // Esperando inicialização
-      if (estado == esperando_inicializacao && received_message->conteudo[0] == 'i') {
-        // Reseta o elevador
-        mensagem *send_message;
-        send_message = (mensagem *)osMailAlloc(mqueueTransmissor, osWaitForever);
-        send_message->conteudo[0] = elevador;
-        send_message->conteudo[1] = 'r';
-        
-        // Repassa a mensagem para mqueueTransmissor
-        osMailPut(mqueueTransmissor, send_message);
-        osMailFree(mqueueElevador, received_message);
-        
-        // Transição para standby
-        estado = standby;
-
-        continue;
+      // Inicializou
+      if (msg_conteudo[0] == 'i') {
+        // Mensagem: initialized
+        initialized = 1;
+      } else {
+        initialized = 0;
       }
       
-      // Standby
-      if (estado == standby) {
-        if (received_message->conteudo[1] == 'I') {
-          // Apertou algum botão interno | <elevador>I<a...p>
-          int destino_andar = andarLetraParaNumero(received_message->conteudo[2]);
+      // Botões apertados
+      if (msg_conteudo[1] == 'I') {
+        // Mensagem: <elevador>I<a...p> (botão interno)
+        int destino_andar = andarLetraParaNumero(msg_conteudo[2]);
+        if (andar != destino_andar || estado_porta == fechada) {
           destinos_internos[destino_andar] = 1;
-        } else if (received_message->conteudo[1] == 'E') {
-          // Apertou algum botão externo | <elevador>E<00...15><s|d>
-          char dezena = received_message->conteudo[2];
-          char unidade = received_message->conteudo[3];
-          int destino_andar = andarStringParaNumero(dezena, unidade);
-          
-          if (received_message->conteudo[4] == 's') {
+        } else {
+          // Desliga o botão interno do andar correspondente
+          mensagem *send_message_desliga_botao;
+          send_message_desliga_botao = (mensagem *)osMailCAlloc(mqueueTransmissor, osWaitForever);
+          send_message_desliga_botao->conteudo[0] = elevador;
+          send_message_desliga_botao->conteudo[1] = 'D';
+          send_message_desliga_botao->conteudo[2] = msg_conteudo[2];
+          osMailPut(mqueueTransmissor, send_message_desliga_botao);
+        }
+      } else if (msg_conteudo[1] == 'E') {
+        // Mensagem: <elevador>E<00...15><s|d> (botão externo)
+        char dezena = msg_conteudo[2];
+        char unidade = msg_conteudo[3];
+        int destino_andar = andarStringParaNumero(dezena, unidade);
+        
+        if (andar != destino_andar || estado_porta == fechada) {
+          if (msg_conteudo[4] == 's') {
             // Botão externo de subida foi apertado
             destinos_sobe[destino_andar] = 1;
-          } else if (received_message->conteudo[4] == 'd') {
+          } else if (msg_conteudo[4] == 'd') {
             // Botão externo de descida foi apertado
             destinos_desce[destino_andar] = 1;
           }
         }
+      }
+      
+      // Chegou ao andar
+      if (msg_conteudo[1] >= '0' && msg_conteudo[1] <= '9') {
+        // Mensagem: <elevador><0...15> (elevador chegou ao andar)
         
-        if (received_message->conteudo[1] == 'I' || received_message->conteudo[1] == 'E') {
-          mensagem *send_message;
-          send_message = (mensagem *)osMailAlloc(mqueueTransmissor, osWaitForever);
-          send_message->conteudo[0] = elevador;
-          send_message->conteudo[1] = 'f';
+        // Conversão do andar para integer
+        char dezena, unidade;
+        if (strlen(msg_conteudo) == 3) {
+          dezena = msg_conteudo[1];
+          unidade = msg_conteudo[2];
+        } else {
+          dezena = '0';
+          unidade = msg_conteudo[1];
+        }
+        
+        // Atualiza a variável de estado andar
+        andar = andarStringParaNumero(dezena, unidade);
+        chegou_em_andar = 1;
+      } else {
+        chegou_em_andar = 0;
+      }
+      
+      // Porta abriu
+      if (msg_conteudo[1] == 'A') {
+        estado_porta = aberta;
+      }
+      
+      // Porta fechou
+      if (msg_conteudo[1] == 'F') {
+        estado_porta = fechada;
+      }
+      
+        /****************************************************/
+       /* 3. Atualização da máquina de estados do elevador */
+      /****************************************************/
+      
+      // Esperando inicialização
+      if (estado_elevador == esperando_inicializacao) {
+        if (initialized) {
+          // Sistema inicializou
           
+          // Reseta o elevador
+          mensagem *send_message;
+          send_message = (mensagem *)osMailCAlloc(mqueueTransmissor, osWaitForever);
+          send_message->conteudo[0] = elevador;
+          send_message->conteudo[1] = 'r';
+          
+          // Repassa a mensagem para mqueueTransmissor
           osMailPut(mqueueTransmissor, send_message);
           osMailFree(mqueueElevador, received_message);
-          estado = fechando_porta;
+          
+          // Transição para standby
+          estado_elevador = standby;
           continue;
         }
       }
       
-      // Mensagem: <elevador>F
-      // Fechando porta
-      if (estado == fechando_porta && received_message->conteudo[1] == 'F') {
-        
-        // Porta foi fechada, manda o elevador subir
-        mensagem *send_message;
-        send_message = (mensagem *)osMailAlloc(mqueueTransmissor, osWaitForever);
-        send_message->conteudo[0] = elevador;
-        send_message->conteudo[1] = 's';
-        
-        osMailPut(mqueueTransmissor, send_message);
-        osMailFree(mqueueElevador, received_message);
-        continue;
-      }
-      
-      // Mensagem: <elevador><andar (0...15)>
-      if (received_message->conteudo[1] >= '0' && received_message->conteudo[1] <= '9') {
-        // Só para fins de teste:
-        // Chegou em algum andar, pare e abra a porta.
-        
-        mensagem *send_message_pare;
-        send_message_pare = (mensagem *)osMailAlloc(mqueueTransmissor, osWaitForever);
-        send_message_pare->conteudo[0] = elevador;
-        send_message_pare->conteudo[1] = 'p';
-        osMailPut(mqueueTransmissor, send_message_pare);
-        
-        mensagem *send_message_abre;
-        send_message_abre = (mensagem *)osMailAlloc(mqueueTransmissor, osWaitForever);
-        send_message_abre->conteudo[0] = elevador;
-        send_message_abre->conteudo[1] = 'a';
-        osMailPut(mqueueTransmissor, send_message_abre);
-        
-        // Conversão do andar em integer
-        char dezena, unidade;
-        if (strlen(received_message->conteudo) == 3) {
-          dezena = received_message->conteudo[1];
-          unidade = received_message->conteudo[2];
-        } else {
-          dezena = '0';
-          unidade = received_message->conteudo[1];
+      // Standby
+      if (estado_elevador == standby) {
+        sentido_elevador = elevador_parado;
+
+        if (possuiDestino(sentido_elevador, destinos_internos, destinos_sobe, destinos_desce)) {
+          // Se possuir destino, fecha a porta
+          mensagem *send_message;
+          send_message = (mensagem *)osMailCAlloc(mqueueTransmissor, osWaitForever);
+          send_message->conteudo[0] = elevador;
+          send_message->conteudo[1] = 'f';
+          
+          // Repassa a mensagem para mqueueTransmissor
+          osMailPut(mqueueTransmissor, send_message);
+          osMailFree(mqueueElevador, received_message);
+          
+          // Transição para fechando porta
+          estado_elevador = fechando_porta;
+          continue;
         }
-        int andar = andarStringParaNumero(dezena, unidade);
-        
-        osMailFree(mqueueElevador, received_message);
-        osDelay(2000);
-        continue;
       }
       
-      // Mensagem: <elevador>E<andar (00...15)><s|d>
-      if (received_message->conteudo[1] == 'E') {
-        // Conversão do andar em integer
-        char dezena, unidade;
-        dezena = received_message->conteudo[2];
-        unidade = received_message->conteudo[3];
+      // Fechando porta
+      if (estado_elevador == fechando_porta) {
+        if (estado_porta == fechada) {
+          // A porta terminou de fechar
+          if (deveSubir(sentido_elevador, andar, destinos_internos, destinos_sobe, destinos_desce)) {
+            // Manda o elevador começar a subir
+            mensagem *send_message;
+            send_message = (mensagem *)osMailCAlloc(mqueueTransmissor, osWaitForever);
+            send_message->conteudo[0] = elevador;
+            send_message->conteudo[1] = 's';
+            
+            // Repassa a mensagem para mqueueTransmissor
+            osMailPut(mqueueTransmissor, send_message);
+            
+            // Transição para descendo
+            estado_elevador = subindo;
+          } else if (deveDescer(sentido_elevador, andar, destinos_internos, destinos_sobe, destinos_desce)) {
+            // Manda o elevador começar a descer
+            mensagem *send_message;
+            send_message = (mensagem *)osMailCAlloc(mqueueTransmissor, osWaitForever);
+            send_message->conteudo[0] = elevador;
+            send_message->conteudo[1] = 'd';
+            
+            // Repassa a mensagem para mqueueTransmissor
+            osMailPut(mqueueTransmissor, send_message);
+            
+            // Transição para descendo
+            estado_elevador = descendo;
+          } else if (deveSubir(elevador_parado, andar, destinos_internos, destinos_sobe, destinos_desce)) {
+            // Manda o elevador começar a subir
+            mensagem *send_message;
+            send_message = (mensagem *)osMailCAlloc(mqueueTransmissor, osWaitForever);
+            send_message->conteudo[0] = elevador;
+            send_message->conteudo[1] = 's';
+            
+            // Repassa a mensagem para mqueueTransmissor
+            osMailPut(mqueueTransmissor, send_message);
+            
+            // Transição para descendo
+            estado_elevador = descendo;
+          } else if (deveDescer(elevador_parado, andar, destinos_internos, destinos_sobe, destinos_desce)) {
+            // Manda o elevador começar a descer
+            mensagem *send_message;
+            send_message = (mensagem *)osMailCAlloc(mqueueTransmissor, osWaitForever);
+            send_message->conteudo[0] = elevador;
+            send_message->conteudo[1] = 'd';
+            
+            // Repassa a mensagem para mqueueTransmissor
+            osMailPut(mqueueTransmissor, send_message);
+            
+            // Transição para descendo
+            estado_elevador = descendo;
+          }
+
+          osMailFree(mqueueElevador, received_message);
+          continue;
+        }
+      }
+      
+      // Subindo
+      if (estado_elevador == subindo) {
+        sentido_elevador = elevador_subindo;
         
-        int andar = andarStringParaNumero(dezena, unidade);
+        if (chegou_em_andar) {
+          // O elevador acabou de chegar em algum andar
+          
+          if(ehDestino(sentido_elevador, andar, destinos_internos, destinos_sobe, destinos_desce)) {
+            // Chegou em algum andar que é destino
+            
+            // Pare o elevador
+            mensagem *send_message_pare;
+            send_message_pare = (mensagem *)osMailCAlloc(mqueueTransmissor, osWaitForever);
+            send_message_pare->conteudo[0] = elevador;
+            send_message_pare->conteudo[1] = 'p';
+            osMailPut(mqueueTransmissor, send_message_pare);
+            
+            // Abra a porta do elevador
+            mensagem *send_message_abre;
+            send_message_abre = (mensagem *)osMailCAlloc(mqueueTransmissor, osWaitForever);
+            send_message_abre->conteudo[0] = elevador;
+            send_message_abre->conteudo[1] = 'a';
+            osMailPut(mqueueTransmissor, send_message_abre);
+            
+            // Remove o andar dos objetivos
+            destinos_internos[andar] = 0;
+            destinos_sobe[andar] = 0;
+            destinos_desce[andar] = 0;
+            
+            // Desliga o botão interno do andar correspondente
+            mensagem *send_message_desliga_botao;
+            send_message_desliga_botao = (mensagem *)osMailCAlloc(mqueueTransmissor, osWaitForever);
+            send_message_desliga_botao->conteudo[0] = elevador;
+            send_message_desliga_botao->conteudo[1] = 'D';
+            send_message_desliga_botao->conteudo[2] = andarNumeroParaLetra(andar);
+            osMailPut(mqueueTransmissor, send_message_desliga_botao);
+            
+            // Transição para abrindo porta
+            estado_elevador = abrindo_porta;
+          }
+          
+          osMailFree(mqueueElevador, received_message);
+          continue;
+        }
+      }
+      
+      // Descendo
+      if (estado_elevador == descendo) {
+        sentido_elevador = elevador_descendo;
         
-        osMailFree(mqueueElevador, received_message);
-        continue;
+        if (chegou_em_andar) {
+          // O elevador acabou de chegar em algum andar
+        
+          if(ehDestino(sentido_elevador, andar, destinos_internos, destinos_sobe, destinos_desce)) {
+            // Chegou em algum andar que é destino
+            
+            // Pare o elevador
+            mensagem *send_message_pare;
+            send_message_pare = (mensagem *)osMailCAlloc(mqueueTransmissor, osWaitForever);
+            send_message_pare->conteudo[0] = elevador;
+            send_message_pare->conteudo[1] = 'p';
+            osMailPut(mqueueTransmissor, send_message_pare);
+            
+            // Abra a porta do elevador
+            mensagem *send_message_abre;
+            send_message_abre = (mensagem *)osMailCAlloc(mqueueTransmissor, osWaitForever);
+            send_message_abre->conteudo[0] = elevador;
+            send_message_abre->conteudo[1] = 'a';
+            osMailPut(mqueueTransmissor, send_message_abre);
+            
+            // Remove o andar dos objetivos
+            destinos_internos[andar] = 0;
+            destinos_sobe[andar] = 0;
+            destinos_desce[andar] = 0;
+            
+            // Desliga o botão interno do andar correspondente
+            mensagem *send_message_desliga_botao;
+            send_message_desliga_botao = (mensagem *)osMailCAlloc(mqueueTransmissor, osWaitForever);
+            send_message_desliga_botao->conteudo[0] = elevador;
+            send_message_desliga_botao->conteudo[1] = 'D';
+            send_message_desliga_botao->conteudo[2] = andarNumeroParaLetra(andar);
+            osMailPut(mqueueTransmissor, send_message_desliga_botao);
+            
+            // Transição para abrindo porta
+            estado_elevador = abrindo_porta;
+          }
+          
+          osMailFree(mqueueElevador, received_message);
+          continue;
+        }
+      }
+      
+      // Abrindo porta
+      if (estado_elevador == abrindo_porta) {
+        if (estado_porta == aberta) {
+          // A porta terminou de abrir
+
+          // Permanece um tempo com a porta aberta
+          osDelay(TEMPO_PORTA_ABERTA);
+          
+          // Verifica se possui destino no sentido atual
+          if (possuiDestino(sentido_elevador, destinos_internos, destinos_sobe, destinos_desce)) {
+            // Fecha a porta do elevador
+            mensagem *send_message;
+            send_message = (mensagem *)osMailCAlloc(mqueueTransmissor, osWaitForever);
+            send_message->conteudo[0] = elevador;
+            send_message->conteudo[1] = 'f';
+            osMailPut(mqueueTransmissor, send_message);
+            
+            // Transição para fechando porta
+            estado_elevador = fechando_porta;
+          } else if (possuiDestino(elevador_parado, destinos_internos, destinos_sobe, destinos_desce)) {
+            // Não possui destino no sentido atual, mas possui no sentido contrário
+            sentido_elevador = elevador_parado;
+            
+            // Fecha a porta do elevador
+            mensagem *send_message;
+            send_message = (mensagem *)osMailCAlloc(mqueueTransmissor, osWaitForever);
+            send_message->conteudo[0] = elevador;
+            send_message->conteudo[1] = 'f';
+            osMailPut(mqueueTransmissor, send_message);
+            
+            // Transição para fechando porta
+            estado_elevador = fechando_porta;
+          } else {
+            // Transição para standby
+            estado_elevador = standby;
+          }
+        }
       }
 
       // Mensagem não utilizada
