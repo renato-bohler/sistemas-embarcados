@@ -16,7 +16,7 @@
         <ShowSource>1</ShowSource>
     </Trace1>
     <DebugChecksum>
-        <Checksum>2938256896</Checksum>
+        <Checksum>812460519</Checksum>
     </DebugChecksum>
     <CodeCoverage>
         <Enabled>_ 0</Enabled>
@@ -86,13 +86,8 @@
         <Bp0>_ "STD_CODE" "{$PROJ_DIR$\..\driverlib\rom.h}.6596.1" 0 0 0 0 "" 0 ""</Bp0>
         <Bp1>_ "STD_CODE" "{$PROJ_DIR$\src}.165.3" 0 0 0 0 "" 0 ""</Bp1>
         <Bp2>_ "STD_CODE" "{$PROJ_DIR$\src}.79.3" 0 0 0 0 "" 0 ""</Bp2>
-        <Bp3>_ "STD_CODE" "{$PROJ_DIR$\src\startup_tm4c1294ncpdt.c}.327.5" 0 0 0 0 "" 0 ""</Bp3>
-        <Bp4>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.0.1" 0 0 0 0 "" 0 ""</Bp4>
-        <Bp5>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.0.1" 0 0 0 0 "" 0 ""</Bp5>
-        <Bp6>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.0.1" 0 0 0 0 "" 0 ""</Bp6>
-        <Bp7>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.0.1" 0 0 0 0 "" 0 ""</Bp7>
-        <Bp8>_ "STD_CODE" "{$PROJ_DIR$\src\main.c}.0.1" 0 0 0 0 "" 0 ""</Bp8>
-        <Count>9</Count>
+        <Bp3>_ "STD_CODE" "{$PROJ_DIR$\src\startup_tm4c1294ncpdt.c}.327.5" 1 0 0 0 "" 0 ""</Bp3>
+        <Count>4</Count>
     </Breakpoints>
     <LogFile>
         <LoggingEnabled>_ 0</LoggingEnabled>
