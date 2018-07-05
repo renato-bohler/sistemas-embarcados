@@ -4,10 +4,7 @@
         <path>$WS_DIR$\driverlib\driverlib.ewp</path>
     </project>
     <project>
-        <path>$WS_DIR$\exemplo1\exemplo1.ewp</path>
-    </project>
-    <project>
-        <path>$WS_DIR$\exemplo2\exemplo2.ewp</path>
+        <path>$WS_DIR$\elevador\elevador.ewp</path>
     </project>
     <project>
         <path>$WS_DIR$\RTOS\RTX\SRC\IAR\RTX_Lib_CM.ewp</path>
