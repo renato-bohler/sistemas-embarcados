@@ -824,24 +824,14 @@
             <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
             <file>$PROJ_DIR$\..\rt_TypeDef.h</file>
             <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</file>
-            <file>$PROJ_DIR$\CM4F_LE\rt_MemBox.__cstat.et</file>
             <file>$TOOLKIT_DIR$\CMSIS\Include\core_cm4.h</file>
-            <file>$PROJ_DIR$\CM4F_LE\rt_Memory.__cstat.et</file>
-            <file>$PROJ_DIR$\CM4F_LE\rt_System.__cstat.et</file>
-            <file>$PROJ_DIR$\CM4F_LE\rt_Robin.__cstat.et</file>
-            <file>$PROJ_DIR$\CM4F_LE\rt_Mutex.__cstat.et</file>
             <file>$PROJ_DIR$\CM4F_LE\rt_CMSIS.o</file>
             <file>$PROJ_DIR$\CM4F_LE\rt_Task.o</file>
             <file>$PROJ_DIR$\CM4F_LE\HAL_CM.o</file>
-            <file>$PROJ_DIR$\CM4F_LE\HAL_CM.__cstat.et</file>
-            <file>$PROJ_DIR$\CM4F_LE\rt_Mailbox.__cstat.et</file>
             <file>$PROJ_DIR$\CM4F_LE\rt_Timer.o</file>
             <file>$PROJ_DIR$\CM4F_LE\rt_Semaphore.o</file>
             <file>$PROJ_DIR$\CM4F_LE\rt_MemBox.o</file>
-            <file>$PROJ_DIR$\CM4F_LE\rt_CMSIS.__cstat.et</file>
-            <file>$PROJ_DIR$\CM4F_LE\rt_Task.__cstat.et</file>
             <file>$PROJ_DIR$\CM4F_LE\rt_Robin.o</file>
-            <file>$PROJ_DIR$\CM4F_LE\rt_Semaphore.__cstat.et</file>
             <file>$PROJ_DIR$\CM4F_LE\RTX_Lib_CM.a</file>
             <file>$PROJ_DIR$\CM4F_LE\SVC_Table.o</file>
             <file>$PROJ_DIR$\CM4F_LE\rt_List.o</file>
@@ -849,24 +839,16 @@
             <file>$PROJ_DIR$\CM4F_LE\rt_Mutex.o</file>
             <file>$PROJ_DIR$\CM4F_LE\rt_System.o</file>
             <file>$PROJ_DIR$\CM4F_LE\HAL_CM4.o</file>
-            <file>$PROJ_DIR$\CM4F_LE\rt_Timer.__cstat.et</file>
             <file>$PROJ_DIR$\CM4F_LE\rt_Event.o</file>
             <file>$PROJ_DIR$\CM4F_LE\rt_Mailbox.o</file>
-            <file>$PROJ_DIR$\CM4F_LE\rt_Time.__cstat.et</file>
-            <file>$PROJ_DIR$\CM4F_LE\rt_Event.__cstat.et</file>
             <file>$PROJ_DIR$\CM4F_LE\rt_Memory.o</file>
-            <file>$PROJ_DIR$\CM4F_LE\rt_List.__cstat.et</file>
         </outputs>
         <file>
             <name>$PROJ_DIR$\..\rt_System.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 66</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 46</file>
+                    <file> 56</file>
                 </tool>
             </outputs>
             <inputs>
@@ -881,11 +863,7 @@
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 59</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 47</file>
+                    <file> 50</file>
                 </tool>
             </outputs>
             <inputs>
@@ -900,11 +878,7 @@
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 65</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 48</file>
+                    <file> 55</file>
                 </tool>
             </outputs>
             <inputs>
@@ -919,11 +893,7 @@
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 50</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 58</file>
+                    <file> 45</file>
                 </tool>
             </outputs>
             <inputs>
@@ -938,7 +908,7 @@
             <outputs>
                 <tool>
                     <name>AARM</name>
-                    <file> 62</file>
+                    <file> 52</file>
                 </tool>
             </outputs>
         </file>
@@ -947,11 +917,7 @@
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 63</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 74</file>
+                    <file> 53</file>
                 </tool>
             </outputs>
             <inputs>
@@ -966,11 +932,7 @@
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 73</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 45</file>
+                    <file> 60</file>
                 </tool>
             </outputs>
             <inputs>
@@ -985,11 +947,7 @@
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 64</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 71</file>
+                    <file> 54</file>
                 </tool>
             </outputs>
             <inputs>
@@ -1004,11 +962,7 @@
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 54</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 68</file>
+                    <file> 47</file>
                 </tool>
             </outputs>
             <inputs>
@@ -1023,11 +977,7 @@
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 69</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 72</file>
+                    <file> 58</file>
                 </tool>
             </outputs>
             <inputs>
@@ -1042,11 +992,7 @@
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 51</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 52</file>
+                    <file> 46</file>
                 </tool>
             </outputs>
             <inputs>
@@ -1061,17 +1007,13 @@
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 49</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 57</file>
+                    <file> 44</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 44 22 27 40 38 42 31 28 33 30 41 37 29 14 10 25 13 23 15 39 34 32 35 1 26 21</file>
+                    <file> 43 22 27 40 38 42 31 28 33 30 41 37 29 14 10 25 13 23 15 39 34 32 35 1 26 21</file>
                 </tool>
             </inputs>
         </file>
@@ -1080,11 +1022,7 @@
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 56</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 43</file>
+                    <file> 49</file>
                 </tool>
             </outputs>
             <inputs>
@@ -1099,11 +1037,7 @@
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 55</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 60</file>
+                    <file> 48</file>
                 </tool>
             </outputs>
             <inputs>
@@ -1118,7 +1052,7 @@
             <outputs>
                 <tool>
                     <name>AARM</name>
-                    <file> 67</file>
+                    <file> 57</file>
                 </tool>
             </outputs>
         </file>
@@ -1127,11 +1061,7 @@
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 70</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 53</file>
+                    <file> 59</file>
                 </tool>
             </outputs>
             <inputs>
@@ -1146,7 +1076,7 @@
             <outputs>
                 <tool>
                     <name>IARCHIVE</name>
-                    <file> 61</file>
+                    <file> 51</file>
                 </tool>
             </outputs>
         </file>
